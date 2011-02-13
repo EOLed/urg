@@ -127,7 +127,7 @@ class UsersController extends UrgAppController {
 				}
 			} else {
 				$this->log("User not registered, did not pass validation: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
-				$this->Session->setFlash(__("users.register.passwords.must.match", true));
+				$this->Session->setFlash(__("The confirmation password does not match.", true));
 			}
 			
 			$this->log("Clearing user's password.", LOG_DEBUG);

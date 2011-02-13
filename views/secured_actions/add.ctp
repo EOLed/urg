@@ -3,7 +3,7 @@
 	<fieldset>
  		<legend><?php __('Add Secured Action'); ?></legend>
 	<?php
-		echo $this->Form->input('role_id', array("empty"=>__("secured.actions.label.role.id.public", true)));
+		echo $this->Form->input('role_id', array("empty"=>__("Public", true)));
 		echo $this->Form->input('controller');
 		echo $this->Form->input('action');
 	?>

@@ -3,13 +3,13 @@
 	<fieldset>
  		<legend><?php __('Add Role'); ?></legend>
 	<?php
-		echo $this->Form->input('group_id', array("label"=>__("roles.label.group", true), "empty"=>__("roles.label.group.select", true)));
+		echo $this->Form->input('group_id', array("label"=>__("Group", true), "empty"=>__("Select a group", true)));
 		echo $this->Form->input('name');
 		echo $this->Form->input('description');
 	?>
 	</fieldset>
 	<fieldset>
- 		<legend><?php __('role.title.secured.actions.manage'); ?></legend>
+ 		<legend><?php __('Manage Secured Actions'); ?></legend>
         <?php echo $this->Form->input("secured_actions", 
                 array("multiple"=>"checkbox", "options"=>$controllers)
         ); ?>

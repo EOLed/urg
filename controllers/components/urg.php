@@ -65,7 +65,6 @@ class UrgComponent extends Object {
         CakeLog::write("debug", 
                 "access for /$controller_name/$controller_action... $access");
 
-
 		return $access;
 	}
 }

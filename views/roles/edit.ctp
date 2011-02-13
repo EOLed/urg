@@ -10,7 +10,7 @@
 	?>
 	</fieldset>
 	<fieldset>
- 		<legend><?php __('role.title.secured.actions.manage'); ?></legend>
+ 		<legend><?php __('Manage Secured Actions'); ?></legend>
         <?php echo $this->Form->input("secured_actions", 
                 array("multiple"=>"checkbox", "options"=>$controllers)
         ); ?>

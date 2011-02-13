@@ -3,7 +3,7 @@
 	<fieldset>
  		<legend><?php __('Add Group'); ?></legend>
 	<?php
-		echo $this->Form->input('group_id', array("label"=>__("groups.label.parent.group", true), "empty"=>__("groups.label.parent.group.none", true)));
+		echo $this->Form->input('group_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
 		echo $this->Form->input('name');
 		echo $this->Form->input('description');
 	?>
