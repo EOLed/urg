@@ -7,7 +7,8 @@
  		<legend><?php __('Add Group'); ?></legend>
 	<?php
 		echo $this->Form->input('group_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
-        echo $this->Slug->slug("name", "slug", array("slug_prefix" => "http://montreal-cac.org/groups/"));
+        echo $this->Slug->slug("name", "slug", array("slug_prefix" => "http://montreal-cac.org/groups/",
+                                                     "auto_update" => true));
 		echo $this->Form->input('description');
 	?>
 	</fieldset>
