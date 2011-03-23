@@ -1,4 +1,5 @@
-<div class="roles index">
+<?php ini_set('memory_limit', '64M'); ?>
+<?php echo phpinfo(); ?><div class="roles index">
 	<h2><?php __('Roles');?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>

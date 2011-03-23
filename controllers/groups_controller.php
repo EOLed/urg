@@ -2,6 +2,7 @@
 class GroupsController extends UrgAppController {
 
 	var $name = 'Groups';
+    var $helpers = array("Html", "Form", "Slug");
 
 	function index() {
 		$this->Group->recursive = 0;

@@ -19,10 +19,18 @@ class UrgComponent extends Object {
         $this->settings = array_merge($this->settings, $settings);
     }
 
-	function has_access() {
-        $plugin_name = $this->controller->params["plugin"];
-        $controller_name = $this->controller->params["controller"];
-        $controller_action = $this->controller->params["action"];
+	function has_access($action = null) {
+        $plugin_name = $controller_name = $controller_action = null;
+        if (is_array($action)) {
+            $plugin_name = isset($action["plugin"]) ? $action["plugin"] : null;
+            $controller_name = $this->controller->params["controller"];
+            $controller_action = $this->controller->params["action"];
+        } else {
+            $plugin_name = $this->controller->params["plugin"];
+            $controller_name = $this->controller->params["controller"];
+            $controller_action = $this->controller->params["action"];
+        }
+
         $logged_user = $this->Auth->user();
         CakeLog::write("debug", 
                 "verifying access for " . ($plugin_name != "" ? "/$plugin_name" : "") . 
@@ -63,7 +71,7 @@ class UrgComponent extends Object {
         }
 
         CakeLog::write("debug", 
-                "access for /$controller_name/$controller_action... $access");
+                "access for /$controller_name/$controller_action... " . ($access ? "true" : "false"));
 
 		return $access;
 	}
