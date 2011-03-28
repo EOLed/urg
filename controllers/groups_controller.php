@@ -9,13 +9,13 @@ class GroupsController extends UrgAppController {
 		$this->set('groups', $this->paginate());
 	}
 
-	function view($id = null) {
-		if (!$id) {
+	function view($slug = null) {
+		if (!$slug) {
 			$this->Session->setFlash(__('Invalid group', true));
 			$this->redirect(array('action' => 'index'));
         }
-		$group =  $this->Group->read(null, $id);
-        $this->log("editing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
+		$group = $this->Group->findBySlug($slug);
+        $this->log("viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
 		$this->set('group', $group);
 	}
 
