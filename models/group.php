@@ -26,16 +26,6 @@ class Group extends UrgAppModel {
 		)
 	);
 
-	var $hasOne = array(
-		'ParentGroup' => array(
-			'className' => 'Group',
-			'foreignKey' => 'group_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
-
 	var $hasMany = array(
 //		'Meeting' => array(
 //			'className' => 'Meeting',
