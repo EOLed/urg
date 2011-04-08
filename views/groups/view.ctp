@@ -14,16 +14,21 @@
     </div>
 
     <div id="about-group" class="grid_4 right-border">
-        <h2><?php echo __("Bio", true) ?></h2>
-        <?php echo $about_group["Post"]["content"]; ?>
+        <?php 
+        foreach ($widgets[0] as $widget) {
+            $options = array();
+            foreach ($this->{$widget}->widget_options as $option) {
+                $options[$option] = ${$option};
+            }
+            echo $this->{$widget}->build($options);
+        }
+        ?>
     </div>
     <div id="group-feed" class="grid_4 right-border">
         <h2><?php echo __("Recent activity", true); ?></h2>
-        <?php echo $this->Group->post_feed($group, $activity); ?>
     </div>
     <div id="group-upcoming" class="grid_4">
         <h2><?php echo __("Upcoming events", true); ?></h2>
-        <?php echo $this->Group->upcoming_activity($upcoming_events); ?>
     </div>
 </div>
 <script type="text/javascript">

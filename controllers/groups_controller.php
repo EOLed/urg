@@ -66,18 +66,25 @@ class GroupsController extends UrgAppController {
             $this->redirect(array('action' => 'index'));
         }
 
-        $this->FlyLoader->load("Helper", "Urg.Group");
-
         $group = $this->Group->findBySlug($slug);
 
+        $widgets = array();
+        $widgets[0] = array(
+                "UrgPost.About" => array("Component" => array("name" => $group["Group"]["name"]))
+        );
+ //       $widgets[1] = array("UrgPost.RecentActivity");
+ //       $widgets[2] = array("UrgPost.UpcomingEvents");
+
+        $widget_list = $this->load_widgets($widgets);
+
         $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
-        $about_group = $this->get_about($group["Group"]["name"]);
         $about = $this->get_about("Montreal Chinese Alliance Church");
-        $this->set('group', $group);
-        $this->set("about_group", $about_group);
-        $this->set("activity", $this->get_recent_activity($group));
-        $this->set("upcoming_events", $this->get_upcoming_activity($group));
         $this->set("about", $about);
+        $about_group = $this->get_about($group["Group"]["name"]);
+        $this->set('group', $group);
+ //       $this->set("about_group", $about_group);
+ //       $this->set("activity", $this->get_recent_activity($group));
+ //       $this->set("upcoming_events", $this->get_upcoming_activity($group));
 
         $banners = $this->get_banners($about_group);
         if (empty($banners)) {
@@ -87,6 +94,27 @@ class GroupsController extends UrgAppController {
         $this->set("title_for_layout", __("Groups", true) . " &raquo; " . $group["Group"]["name"]);
 
         $this->set("banners", $banners);
+        $this->set("widgets", $widget_list);
+    }
+
+    function load_widgets($widgets) {
+        $widget_list = array();
+        for ($i=0; $i < sizeof($widgets); $i++) {
+            $widget_row = $widgets[$i];
+            $this->log("widget row: " . Debugger::exportVar($widget_row), LOG_DEBUG);
+            $j = 0;
+            foreach ($widget_row as $widget=>$widget_settings) {
+                $component = $this->FlyLoader->load("Component", 
+                                                    array($widget=>$widget_settings["Component"]));
+                $widget_list[$i][$j] = $component;
+                $this->FlyLoader->load("Helper", $widget);
+
+                $this->{$component}->build();
+                $j++;
+            }
+        }
+
+        return $widget_list;
     }
 
     function get_banners($post) {
