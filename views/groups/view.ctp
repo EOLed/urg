@@ -13,7 +13,7 @@
         <div><?php echo $group["Group"]["name"]?></div>
     </div>
 
-    <div id="about-group" class="grid_4 right-border">
+    <div id="col-1" class="grid_4 right-border view-col">
         <?php 
         foreach ($widgets[0] as $widget) {
             $options = array();
@@ -24,15 +24,31 @@
         }
         ?>
     </div>
-    <div id="group-feed" class="grid_4 right-border">
-        <h2><?php echo __("Recent activity", true); ?></h2>
+    <div id="col-2" class="grid_4 right-border view-col">
+        <?php 
+        foreach ($widgets[1] as $widget) {
+            $options = array();
+            foreach ($this->{$widget}->widget_options as $option) {
+                $options[$option] = ${$option};
+            }
+            echo $this->{$widget}->build($options);
+        }
+        ?>
     </div>
-    <div id="group-upcoming" class="grid_4">
-        <h2><?php echo __("Upcoming events", true); ?></h2>
+    <div id="col-3" class="grid_4 view-col">
+        <?php 
+        foreach ($widgets[2] as $widget) {
+            $options = array();
+            foreach ($this->{$widget}->widget_options as $option) {
+                $options[$option] = ${$option};
+            }
+            echo $this->{$widget}->build($options);
+        }
+        ?>
     </div>
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
-$("#about-group, #group-feed, #group-upcoming").equalHeight();
+$(".view-col").equalHeight();
 </script>
 <?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>

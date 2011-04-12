@@ -72,8 +72,14 @@ class GroupsController extends UrgAppController {
         $widgets[0] = array(
                 "UrgPost.About" => array("Component" => array("name" => $group["Group"]["name"]))
         );
- //       $widgets[1] = array("UrgPost.RecentActivity");
- //       $widgets[2] = array("UrgPost.UpcomingEvents");
+
+        $widgets[1] = array(
+                "UrgPost.RecentActivity" => array("Component" => array("group" => $group))
+        );
+
+        $widgets[2] = array(
+                "UrgPost.UpcomingEvents" => array("Component" => array("group" => $group))
+        );
 
         $widget_list = $this->load_widgets($widgets);
 
