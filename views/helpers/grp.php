@@ -64,8 +64,24 @@ class GrpHelper extends AppHelper {
             }
         }
 
-        $rows = $this->Html->tag("li", $group["Group"]["name"] . $rows);
+        $rows = $this->Html->tag("li", $group["Group"]["name"] . " " . $this->actions($group) . $rows);
 
         return $rows;
+    }
+
+    function actions($group) {
+        $actions = $this->Html->link(__('View', true), 
+                array('action' => 'view', $group['Group']['id'])) . " ";
+        $actions .= $this->Html->link(__('Edit', true), 
+                array('action' => 'edit', $group['Group']['id'])) . " ";
+        $actions .= $this->Html->link(__('Delete', true), 
+                                      array('action' => 'delete', $group['Group']['id']), 
+                                      null, 
+                                      sprintf(__('Are you sure you want to delete # %s?', true), 
+                                              $group['Group']['id'])) . " ";
+        $actions .= $this->Html->link(__('New Group', true), 
+                array('action' => 'add', $group['Group']['id']));
+
+        return $actions;
     }
 }

@@ -16,7 +16,7 @@ class GroupsController extends UrgAppController {
         $this->set('groups', $groups);
 	}
 
-	function add() {
+	function add($group_id = null) {
 		if (!empty($this->data)) {
 			$this->Group->create();
 			if ($this->Group->save($this->data)) {
@@ -25,7 +25,9 @@ class GroupsController extends UrgAppController {
 			} else {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
 			}
-		}
+		} else if ($group_id != null) {
+            $this->data["Group"]["group_id"] = $group_id;
+        }
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups', 'groups'));
 	}
