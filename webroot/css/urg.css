@@ -19,6 +19,16 @@ span#GroupSlugLabel {
     font-family: sans-serif;
 }
 
+ul#group-list {
+    list-style-type: circle; 
+}
+
+ul#group-list ul li {
+   margin-left: 10px; 
+   padding-top: 5px;
+   list-style-type: disc;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 

@@ -1,5 +1,5 @@
 <?php
-class GroupHelper extends AppHelper {
+class GrpHelper extends AppHelper {
     var $helpers = array("Html", "Time");
 
     function post_feed($group, $posts) {
@@ -42,9 +42,29 @@ class GroupHelper extends AppHelper {
 
         if (isset($group["children"])) {
             foreach ($group["children"] as $child) {
-                $rows .= $this->list($child);
+                $rows .= $this->rows($child);
             }
         }
+
+        return $rows;
+    }
+
+    function li($group) {
+        $rows = "";
+
+        if (isset($group["children"])) {
+            $child_rows = "";
+
+            if (sizeof($group["children"]) > 0) {
+                foreach ($group["children"] as $child) {
+                    $child_rows .= $this->li($child);
+                }
+
+                $rows .= $this->Html->tag("ul", $child_rows);
+            }
+        }
+
+        $rows = $this->Html->tag("li", $group["Group"]["name"] . $rows);
 
         return $rows;
     }

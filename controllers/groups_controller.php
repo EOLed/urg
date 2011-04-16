@@ -1,16 +1,19 @@
 <?php
 App::import("Component", "ImgLib.ImgLib");
-App::import("Helper", "Urg.Group");
+App::import("Helper", "Urg.Grp");
 class GroupsController extends UrgAppController {
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
-    var $helpers = array("Html", "Form", "Slug");
+    var $helpers = array("Html", "Form", "Slug", "Grp");
     var $components = array("ImgLib", "FlyLoader");
 
 	function index() {
 		$this->Group->recursive = 0;
-		$this->set('groups', $this->paginate());
+		$groups = $this->Group->find("threaded", 
+                array("fields" => array("*, Group.group_id parent_id")));
+        $this->log("groups: " . Debugger::exportVar($groups, 6), LOG_DEBUG);
+        $this->set('groups', $groups);
 	}
 
 	function add() {
