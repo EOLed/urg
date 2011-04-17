@@ -37,5 +37,7 @@
 		<li><?php echo $this->Html->link(__('New Role', true), array('controller' => 'roles', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
-
+<script type="text/javascript">
+    $("#group-list li").hover(function() { $(this).children("span").show(); }, function() { $(this).children("span").hide(); });
+</script>
 <?php echo $this->Html->css("/urg/css/urg.css", null, array("inline"=>false)); ?>

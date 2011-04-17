@@ -65,13 +65,32 @@ class GroupsController extends UrgAppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
-    function view($slug) {
-        if (!$slug) {
-            $this->Session->setFlash(__('Must specify group.', true));
-            $this->redirect(array('action' => 'index'));
+    function view() {
+        $num_args = func_num_args();
+        $args = func_get_args();
+
+        $slug = null;
+        $id = null;
+
+        if ($num_args === 1) {
+            $id = $args[0];
+        } else if ($num_args == 2) {
+            $id = $args[0];
+            $slug = $args[1];
         }
 
-        $group = $this->Group->findBySlug($slug);
+        $group = $this->Group->read(null, $id);
+
+        if (!$slug || $slug != $group["Group"]["slug"]) {
+            if (isset($group["Group"]["slug"]) && $group["Group"]["slug"] != "") {
+                $slug = $group["Group"]["slug"];
+            } else {
+                $this->Group->id = $id;
+                $slug = strtolower(Inflector::slug($group["Group"]["name"], "-"));
+                $this->Group->saveField("slug", $slug);
+            }
+            $this->redirect("/urg/groups/view/$id/$slug");
+        }
 
         $widgets = array();
         $widgets[0] = array(

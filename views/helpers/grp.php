@@ -71,7 +71,7 @@ class GrpHelper extends AppHelper {
 
     function actions($group) {
         $actions = $this->Html->link(__('View', true), 
-                array('action' => 'view', $group['Group']['id'])) . " ";
+                array('action' => 'view', $group['Group']['id'], $group['Group']['slug'])) . " ";
         $actions .= $this->Html->link(__('Edit', true), 
                 array('action' => 'edit', $group['Group']['id'])) . " ";
         $actions .= $this->Html->link(__('Delete', true), 
@@ -80,8 +80,10 @@ class GrpHelper extends AppHelper {
                                       sprintf(__('Are you sure you want to delete # %s?', true), 
                                               $group['Group']['id'])) . " ";
         $actions .= $this->Html->link(__('New Group', true), 
-                array('action' => 'add', $group['Group']['id']));
+                array('action' => 'add', $group['Group']['id'])) . " ";
+        $actions .= $this->Html->link(__('New Post', true), 
+                array('controller' => 'posts', 'plugin' => 'urg_post', 'action' => 'add', $group['Group']['slug']));
 
-        return $actions;
+        return $this->Html->tag("span", $actions, array("style" => "display: none"));
     }
 }
