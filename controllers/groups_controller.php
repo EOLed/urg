@@ -148,6 +148,7 @@ class GroupsController extends UrgAppController {
     }
 
     function get_banners($post) {
+        $this->log("getting banner for post: " . Debugger::exportVar($post, 3), LOG_DEBUG);
         $this->loadModel("Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
@@ -166,6 +167,9 @@ class GroupsController extends UrgAppController {
                 }
             }
         }
+
+        $this->log("banners for " . $post["Post"]["title"] . ": " . Debugger::exportVar($banners, 3), 
+                   LOG_DEBUG);
 
         return $banners;
     }
@@ -187,6 +191,20 @@ class GroupsController extends UrgAppController {
                       "order" => "Post.publish_timestamp DESC"
                 )
         );
+
+        if ($about === false) {
+            $this->Post->bindModel(array("belongsTo" => array("Group")));
+            $this->Post->bindModel(array("hasMany" => array("Attachment")));
+
+            $about = $this->Post->find("first", 
+                array("conditions" => 
+                        array(
+                            "AND" => array("Post.title" => "About", "Group.name" => $name)
+                        ),
+                      "order" => "Post.publish_timestamp DESC"
+                )
+            );
+        }
 
         $this->log("about for group: $name" .  Debugger::exportVar($about, 3), LOG_DEBUG);
 
