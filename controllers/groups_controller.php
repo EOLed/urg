@@ -8,15 +8,24 @@ class GroupsController extends UrgAppController {
     var $helpers = array("Html", "Form", "Slug", "Grp");
     var $components = array("ImgLib", "FlyLoader");
 
+    function init() {
+        $data = array();
+        $data["Group"]["parent_id"] = 1;
+        $data["Group"]["name"] = "Montreal Chinese Alliance Church";
+        $data["Group"]["slug"] = "mcac";
+
+        $this->Group->save($data);
+        $this->redirect(array("action"=>"index"));
+    }
+
 	function index() {
 		$this->Group->recursive = 0;
-		$groups = $this->Group->find("threaded", 
-                array("fields" => array("*, Group.group_id parent_id")));
+        $groups = $this->Group->find("threaded");
         $this->log("groups: " . Debugger::exportVar($groups, 6), LOG_DEBUG);
         $this->set('groups', $groups);
 	}
 
-	function add($group_id = null) {
+	function add($parent_id = null) {
 		if (!empty($this->data)) {
 			$this->Group->create();
 			if ($this->Group->save($this->data)) {
@@ -25,8 +34,8 @@ class GroupsController extends UrgAppController {
 			} else {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
 			}
-		} else if ($group_id != null) {
-            $this->data["Group"]["group_id"] = $group_id;
+		} else if ($parent_id != null) {
+            $this->data["Group"]["parent_id"] = $parent_id;
         }
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups', 'groups'));
@@ -185,7 +194,7 @@ class GroupsController extends UrgAppController {
                 array("conditions" => 
                         array("OR" => array(
                                 "Group.name" => "About", 
-                                "Group.group_id" => $about_group["Group"]["id"]),
+                                "Group.parent_id" => $about_group["Group"]["id"]),
                               "AND" => array("Post.title" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"

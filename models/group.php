@@ -2,6 +2,7 @@
 class Group extends UrgAppModel {
 	var $name = 'Group';
 	var $displayField = 'name';
+    var $actsAs = array("Tree");
 	var $validate = array(
 		'name' => array(
 			'notempty' => array(
@@ -19,7 +20,7 @@ class Group extends UrgAppModel {
 	var $belongsTo = array(
 		'ParentGroup' => array(
 			'className' => 'Group',
-			'foreignKey' => 'group_id',
+			'foreignKey' => 'parent_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
