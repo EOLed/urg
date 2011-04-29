@@ -101,18 +101,11 @@ class GroupsController extends UrgAppController {
             $this->redirect("/urg/groups/view/$id/$slug");
         }
 
-        $widgets = array();
-        $widgets[0] = array(
-                "UrgPost.About" => array("Component" => array("name" => $group["Group"]["name"]))
-        );
-
-        $widgets[1] = array(
-                "UrgPost.RecentActivity" => array("Component" => array("group" => $group))
-        );
-
-        $widgets[2] = array(
-                "UrgPost.UpcomingEvents" => array("Component" => array("group" => $group))
-        );
+        $widgets = $this->Group->Widget->find("all", array(
+                "conditions" => array("Widget.group_id" => $id,
+                                      "Widget.action" => "/urg/groups/view"),
+                "order" => "Widget.placement"
+        ));
 
         $widget_list = $this->load_widgets($widgets);
 
@@ -138,20 +131,19 @@ class GroupsController extends UrgAppController {
 
     function load_widgets($widgets) {
         $widget_list = array();
-        for ($i=0; $i < sizeof($widgets); $i++) {
-            $widget_row = $widgets[$i];
-            $this->log("widget row: " . Debugger::exportVar($widget_row), LOG_DEBUG);
-            $j = 0;
-            foreach ($widget_row as $widget=>$widget_settings) {
-                $component = $this->FlyLoader->load("Component", 
-                                                    array($widget=>$widget_settings["Component"]));
-                $widget_list[$i][$j] = $component;
-                $this->FlyLoader->load("Helper", $widget);
+        foreach ($widgets as $widget) {
+            $placement = explode("|", $widget["Widget"]["placement"]);
+            $widget_settings = json_decode($widget["Widget"]["options"], true);
+            $this->log("widget settings " . $widget["Widget"]["name"] . " - " . $widget["Widget"]["options"] . " : " . Debugger::exportVar($widget_settings, 3), LOG_DEBUG);
+            $component = $this->FlyLoader->load("Component", array(
+                    $widget["Widget"]["name"]=>$widget_settings["Component"]));
+            $widget_list[$placement[0]][$placement[1]] = $component;
+            $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
 
-                $this->{$component}->build();
-                $j++;
-            }
+            $this->{$component}->build();
         }
+
+        $this->log("widget list: " . Debugger::exportVar($widget_list, 4), LOG_DEBUG);
 
         return $widget_list;
     }

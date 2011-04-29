@@ -45,6 +45,11 @@ class Group extends UrgAppModel {
 			'className' => 'Role',
 			'foreignKey' => 'group_id',
 			'dependent' => false,
+		),
+		'Widget' => array(
+			'className' => 'Widget',
+			'foreignKey' => 'group_id',
+			'dependent' => false,
 		)
 	);
 

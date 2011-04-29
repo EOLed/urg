@@ -82,7 +82,9 @@ class GrpHelper extends AppHelper {
         $actions .= $this->Html->link(__('New Group', true), 
                 array('action' => 'add', $group['Group']['id'])) . " ";
         $actions .= $this->Html->link(__('New Post', true), 
-                array('controller' => 'posts', 'plugin' => 'urg_post', 'action' => 'add', $group['Group']['slug']));
+                array('controller' => 'posts', 'plugin' => 'urg_post', 'action' => 'add', $group['Group']['slug'])) . " ";
+        $actions .= $this->Html->link(__('Add Widget', true), 
+                array('controller' => 'widgets', 'action' => 'add', $group['Group']['id']));
 
         return $this->Html->tag("span", $actions, array("style" => "display: none"));
     }
