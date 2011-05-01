@@ -17,10 +17,10 @@
         <?php 
         foreach ($widgets[0] as $widget) {
             $options = array();
-            foreach ($this->{$widget}->widget_options as $option) {
+            foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option};
             }
-            echo $this->{$widget}->build($options);
+            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
         }
         ?>
     </div>
@@ -28,10 +28,10 @@
         <?php 
         foreach ($widgets[1] as $widget) {
             $options = array();
-            foreach ($this->{$widget}->widget_options as $option) {
+            foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option};
             }
-            echo $this->{$widget}->build($options);
+            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
         }
         ?>
     </div>
@@ -39,10 +39,10 @@
         <?php 
         foreach ($widgets[2] as $widget) {
             $options = array();
-            foreach ($this->{$widget}->widget_options as $option) {
+            foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option};
             }
-            echo $this->{$widget}->build($options);
+            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
         }
         ?>
     </div>
