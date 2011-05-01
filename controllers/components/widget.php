@@ -12,21 +12,32 @@ class WidgetComponent extends Object {
     function load($widgets, $vars = array()) {
         $widget_list = array();
         foreach ($widgets as $widget) {
-            $placement = explode("|", $widget["Widget"]["placement"]);
-
             foreach ($vars as $key => $value) {
                 $widget["Widget"]["options"] = str_replace('"${' . $key . '}"', 
                                                            $value, 
                                                            $widget["Widget"]["options"]);
             }
             $widget_settings = json_decode($widget["Widget"]["options"], true);
-            $component = $this->FlyLoader->load("Component", array(
-                    $widget["Widget"]["name"]=>$widget_settings["Component"]));
-            $widget["Widget"]["helper_name"] = $component;
-            $widget_list[$placement[0]][$placement[1]] = $widget;
-            $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
 
-            $this->controller->{$component}->build();
+            $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
+            if (property_exists($this->controller, $component) &&
+                    $this->controller->{$component} != null) {
+                CakeLog::write("debug", "using existing component $component");
+                $widget["Widget"]["helper_name"] = $component;
+                $this->controller->{$component}->settings[$widget["Widget"]["id"]] = 
+                        $widget_settings["Component"];
+                array_push($widget_list, $widget);
+            } else {
+                CakeLog::write("debug", "loading component $component");
+                $component = $this->FlyLoader->load("Component", 
+                        array($widget["Widget"]["name"] => 
+                               array($widget["Widget"]["id"] => $widget_settings["Component"])));
+                $widget["Widget"]["helper_name"] = $component;
+                array_push($widget_list, $widget);
+                $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
+            }
+
+            $this->controller->{$component}->build($widget["Widget"]["id"]);
         }
 
         CakeLog::write("debug", "widget list: " . Debugger::exportVar($widget_list, 4));

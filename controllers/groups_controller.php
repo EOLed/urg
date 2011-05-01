@@ -108,7 +108,8 @@ class GroupsController extends UrgAppController {
                 "order" => "Widget.placement"
         ));
 
-        $widget_list = $this->Widget->load($widgets, array('group_id' => $group["Group"]["id"]));
+        $widget_list = $this->prepare_widgets(
+                $this->Widget->load($widgets, array('group_id' => $group["Group"]["id"])));
 
         $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
         $about = $this->get_about("Montreal Chinese Alliance Church");
@@ -125,6 +126,16 @@ class GroupsController extends UrgAppController {
 
         $this->set("banners", $banners);
         $this->set("widgets", $widget_list);
+    }
+
+    function prepare_widgets($widgets) {
+        $widget_list = array();
+        foreach ($widgets as $widget) {
+            $placement = explode("|", $widget["Widget"]["placement"]);
+            $widget_list[$placement[0]][$placement[1]] = $widget;
+        }
+
+        return $widget_list;
     }
 
     function get_banners($post) {
