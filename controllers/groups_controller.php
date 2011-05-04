@@ -108,6 +108,22 @@ class GroupsController extends UrgAppController {
                 "order" => "Widget.placement"
         ));
 
+        $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
+
+        while (empty($widgets)) {
+            $parent = $this->Group->getparentnode($id);
+
+            if ($id !== false) {
+                $widgets = $this->Group->Widget->find("all", array(
+                        "conditions" => array("Widget.group_id" => $parent["Group"]["id"],
+                                              "Widget.action" => "/urg/groups/view"),
+                        "order" => "Widget.placement"
+                ));
+            } else {
+                break;
+            }
+        }
+
         $widget_list = $this->prepare_widgets(
                 $this->Widget->load($widgets, array('group_id' => $group["Group"]["id"])));
 
