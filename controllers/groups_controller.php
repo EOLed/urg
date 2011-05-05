@@ -57,9 +57,12 @@ class GroupsController extends UrgAppController {
 		}
 		if (empty($this->data)) {
 			$this->data = $this->Group->read(null, $id);
+            $this->log("editing group: " . Debugger::exportVar($this->data, 4), LOG_DEBUG);
 		}
-		$groups = $this->Group->find('list');
-		$this->set(compact('groups', 'groups'));
+
+		$parents = $this->Group->ParentGroup->find('list');
+
+		$this->set("parents", $parents);
 	}
 
 	function delete($id = null) {

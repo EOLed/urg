@@ -7,7 +7,7 @@
  		<legend><?php __('Edit Group'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('group_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
+		echo $this->Form->input('parent_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
         echo $this->Slug->slug("name", "slug", 
                 array("slug_prefix" => "http://montreal-cac.org/urg_group/groups/", 
                       "auto_update" => false));
