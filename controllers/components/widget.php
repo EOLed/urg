@@ -13,9 +13,10 @@ class WidgetComponent extends Object {
         $widget_list = array();
         foreach ($widgets as $widget) {
             foreach ($vars as $key => $value) {
-                $widget["Widget"]["options"] = str_replace('"${' . $key . '}"', 
-                                                           $value, 
-                                                           $widget["Widget"]["options"]);
+                $widget["Widget"]["options"] = 
+                        str_replace('${' . $key . '}', 
+                                    is_numeric($value) ? $value : "\"$value\"", 
+                                    $widget["Widget"]["options"]);
             }
             $widget_settings = json_decode($widget["Widget"]["options"], true);
 
