@@ -29,6 +29,10 @@ ul#group-list ul li {
    list-style-type: disc;
 }
 
+div.group-widget {
+    padding-bottom: 15px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 

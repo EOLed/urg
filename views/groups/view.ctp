@@ -1,3 +1,4 @@
+<?php $this->Html->css("/urg/css/urg.css", null, array("inline" => false)); ?>
 <div class="groups view">
     <?php foreach ($banners as $banner) { ?>
     <div id="banner" class="grid_9 right-border">
@@ -20,7 +21,7 @@
             foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
             }
-            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
+            echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
         }
         ?>
     </div>
@@ -31,7 +32,7 @@
             foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
             }
-            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
+            echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
         }
         ?>
     </div>
@@ -42,7 +43,7 @@
             foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                 $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
             }
-            echo $this->{$widget["Widget"]["helper_name"]}->build($options);
+            echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
         }
         ?>
     </div>
@@ -51,4 +52,3 @@
 <?php echo $this->element("js_equal_height"); ?>
 $(".view-col").equalHeight();
 </script>
-<?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
