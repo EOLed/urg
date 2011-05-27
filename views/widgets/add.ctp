@@ -1,9 +1,9 @@
-<div class="widgets form">
+<div class="grid_6 widgets form">
 <?php echo $this->Form->create('Widget');?>
 	<fieldset>
  		<legend><?php __('Add Widget'); ?></legend>
 	<?php
-		echo $this->Form->input('group_id');
+		echo $this->Form->input('group_id', array("empty"=>__("All groups", true)));
 		echo $this->Form->input('name');
 		echo $this->Form->input('action');
 		echo $this->Form->input('placement');
@@ -12,8 +12,8 @@
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>
 </div>
-<div class="actions">
-	<h3><?php __('Actions'); ?></h3>
+<div class="grid_6 actions">
+	<h2><?php __('Actions'); ?></h2>
 	<ul>
 
 		<li><?php echo $this->Html->link(__('List Widgets', true), array('action' => 'index'));?></li>

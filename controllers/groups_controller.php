@@ -1,23 +1,13 @@
 <?php
 App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "Urg.Grp");
-App::import("Component", "Urg.Widget");
+App::import("Component", "Urg.WidgetUtil");
 class GroupsController extends UrgAppController {
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
     var $helpers = array("Html", "Form", "Slug", "Grp");
-    var $components = array("ImgLib", "Widget");
-
-    function init() {
-        $data = array();
-        $data["Group"]["parent_id"] = 1;
-        $data["Group"]["name"] = "Montreal Chinese Alliance Church";
-        $data["Group"]["slug"] = "mcac";
-
-        $this->Group->save($data);
-        $this->redirect(array("action"=>"index"));
-    }
+    var $components = array("ImgLib", "WidgetUtil");
 
 	function index() {
 		$this->Group->recursive = 0;
@@ -105,30 +95,9 @@ class GroupsController extends UrgAppController {
             $this->redirect("/urg/groups/view/$id/$slug");
         }
 
-        $widgets = $this->Group->Widget->find("all", array(
-                "conditions" => array("Widget.group_id" => $id,
-                                      "Widget.action" => "/urg/groups/view"),
-                "order" => "Widget.placement"
-        ));
-
+        $widgets = $this->WidgetUtil->load($group["Group"]["id"], array('group_id' => $group["Group"]["id"]));
         $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
-
-        while (empty($widgets)) {
-            $parent = $this->Group->getparentnode($id);
-
-            if ($id !== false) {
-                $widgets = $this->Group->Widget->find("all", array(
-                        "conditions" => array("Widget.group_id" => $parent["Group"]["id"],
-                                              "Widget.action" => "/urg/groups/view"),
-                        "order" => "Widget.placement"
-                ));
-            } else {
-                break;
-            }
-        }
-
-        $widget_list = $this->prepare_widgets(
-                $this->Widget->load($widgets, array('group_id' => $group["Group"]["id"])));
+        $widget_list = $this->prepare_widgets($widgets);
 
         $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
         $about = $this->get_about("Montreal Chinese Alliance Church");
