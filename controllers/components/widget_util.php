@@ -39,9 +39,9 @@ class WidgetUtilComponent extends Object {
         $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
 
         while (empty($widgets)) {
-            $parent = $this->controller->Group->getparentnode($id);
+            $parent = $this->controller->Group->getparentnode($group_id);
 
-            if ($id !== false) {
+            if ($group_id !== false) {
                 $widgets = $this->controller->Group->Widget->find("all", array(
                         "conditions" => array("Widget.group_id" => $parent["Group"]["id"],
                                               "Widget.action" => $url),

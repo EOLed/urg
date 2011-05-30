@@ -95,7 +95,8 @@ class GroupsController extends UrgAppController {
             $this->redirect("/urg/groups/view/$id/$slug");
         }
 
-        $widgets = $this->WidgetUtil->load($group["Group"]["id"], array('group_id' => $group["Group"]["id"]));
+        $widgets = $this->WidgetUtil->load($group["Group"]["id"], 
+                                           array('group_id' => $group["Group"]["id"]));
         $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
         $widget_list = $this->prepare_widgets($widgets);
 
