@@ -69,6 +69,7 @@ class GroupsController extends UrgAppController {
 	}
 
     function view() {
+        $this->log("viewing group...", LOG_DEBUG);
         $num_args = func_num_args();
         $args = func_get_args();
 
@@ -118,11 +119,14 @@ class GroupsController extends UrgAppController {
     }
 
     function prepare_widgets($widgets) {
+        $this->log("preparing widgets...", LOG_DEBUG);
         $widget_list = array();
         foreach ($widgets as $widget) {
             $placement = explode("|", $widget["Widget"]["placement"]);
             $widget_list[$placement[0]][$placement[1]] = $widget;
         }
+
+        $this->log("widget list: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
 
         return $widget_list;
     }

@@ -40,10 +40,12 @@ class WidgetUtilComponent extends Object {
 
         while (empty($widgets)) {
             $parent = $this->controller->Group->getparentnode($group_id);
+            CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
 
-            if ($group_id !== false) {
+            if ($parent !== false) {
+                $group_id = $parent["Group"]["id"];
                 $widgets = $this->controller->Group->Widget->find("all", array(
-                        "conditions" => array("Widget.group_id" => $parent["Group"]["id"],
+                        "conditions" => array("Widget.group_id" => $group_id,
                                               "Widget.action" => $url),
                         "order" => "Widget.placement"
                 ));
