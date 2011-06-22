@@ -30,6 +30,7 @@ class WidgetUtilComponent extends Object {
     function load($group_id, $vars = array()) {
         $url = $this->url();
         $this->log("loading widgets for $url", LOG_DEBUG); 
+        $this->controller->loadModel("Group");
         $widgets = $this->controller->Group->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
                                       "Widget.action" => "/urg/groups/view"),
