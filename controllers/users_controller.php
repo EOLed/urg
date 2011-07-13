@@ -101,12 +101,13 @@ class UsersController extends UrgAppController {
 
 	function login() {
 		if (!empty($this->data)) {
-            $this->log("user logging in: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+            $this->log("user logging in: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
 		}
 	}
 	
 	function logout() {
 		$this->log("logging out user: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+        $this->Session->destroy();
 		$this->redirect($this->Auth->logout());
 	}
 	
@@ -114,10 +115,10 @@ class UsersController extends UrgAppController {
 		if (!empty($this->data)) {
 			$this->log("Validating user form...", LOG_DEBUG);
 			if ($this->data[$this->modelName]["password"] == $this->Auth->password($this->data[$this->modelName]["confirm"])) {
-				$this->log("Attempting to register user...", LOG_DEBUG);
-				
 				$this->{$this->modelName}->create();
 				
+				$this->log("Attempting to register user..." . Debugger::exportVar($this->data, 3), 
+                           LOG_DEBUG);
 				$user = $this->{$this->modelName}->saveAll($this->data);
 				
 				if (empty($user)) {
@@ -133,6 +134,9 @@ class UsersController extends UrgAppController {
 			$this->log("Clearing user's password.", LOG_DEBUG);
 			$this->data[$this->modelName]["password"] = "";
 			$this->data[$this->modelName]["confirm"] = "";
-		}
+        }
+
+        $locales = Configure::read("Locale");
+        $this->set("locales", $locales);
 	}
 }

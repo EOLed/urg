@@ -33,7 +33,7 @@ class WidgetUtilComponent extends Object {
         $this->controller->loadModel("Group");
         $widgets = $this->controller->Group->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
-                                      "Widget.action" => "/urg/groups/view"),
+                                      "Widget.action" => $url),
                 "order" => "Widget.placement"
         ));
 

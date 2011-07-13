@@ -2,6 +2,7 @@
 App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "Urg.Grp");
 App::import("Component", "Urg.WidgetUtil");
+App::import("Model", "UrgPost.Post");
 class GroupsController extends UrgAppController {
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
@@ -68,33 +69,13 @@ class GroupsController extends UrgAppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
-    function view() {
+    function view($slug = null) {
+        if ($slug == null) {
+            $slug = $this->params["group_slug"];
+        }
+
         $this->log("viewing group...", LOG_DEBUG);
-        $num_args = func_num_args();
-        $args = func_get_args();
-
-        $slug = null;
-        $id = null;
-
-        if ($num_args === 1) {
-            $id = $args[0];
-        } else if ($num_args == 2) {
-            $id = $args[0];
-            $slug = $args[1];
-        }
-
-        $group = $this->Group->read(null, $id);
-
-        if (!$slug || $slug != $group["Group"]["slug"]) {
-            if (isset($group["Group"]["slug"]) && $group["Group"]["slug"] != "") {
-                $slug = $group["Group"]["slug"];
-            } else {
-                $this->Group->id = $id;
-                $slug = strtolower(Inflector::slug($group["Group"]["name"], "-"));
-                $this->Group->saveField("slug", $slug);
-            }
-            $this->redirect("/urg/groups/view/$id/$slug");
-        }
+        $group = $this->Group->findBySlug($slug);
 
         $widgets = $this->WidgetUtil->load($group["Group"]["id"], 
                                            array('group_id' => $group["Group"]["id"]));
@@ -159,18 +140,19 @@ class GroupsController extends UrgAppController {
     }
 
     function get_about($name) {
-        $this->loadModel("Post");
-        $this->Post->bindModel(array("belongsTo" => array("Group")));
-        $this->Post->bindModel(array("hasMany" => array("Attachment")));
+        $this->loadModel("UrgPost.Post");
 
         $about_group = $this->Group->findByName("About");
+       
+        $this->Post->bindModel(array("belongsTo" => array("Group")));
+        $this->Post->bindModel(array("hasMany" => array("Attachment")));
 
         $about = $this->Post->find("first", 
                 array("conditions" => 
                         array("OR" => array(
                                 "Group.name" => "About", 
                                 "Group.parent_id" => $about_group["Group"]["id"]),
-                              "AND" => array("Post.title" => $name)
+                              "AND" => array("I18n__title.content" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
                 )
@@ -183,7 +165,7 @@ class GroupsController extends UrgAppController {
             $about = $this->Post->find("first", 
                 array("conditions" => 
                         array(
-                            "AND" => array("Post.title" => "About", "Group.name" => $name)
+                            "AND" => array("I18n__title.content" => "About", "Group.name" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
                 )

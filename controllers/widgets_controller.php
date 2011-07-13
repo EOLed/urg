@@ -55,6 +55,27 @@ class WidgetsController extends AppController {
 		$this->set(compact('groups'));
 	}
 
+	function duplicate($id = null) {
+		if (!$id && empty($this->data)) {
+			$this->Session->setFlash(__('Invalid widget', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		if (!empty($this->data)) {
+            $this->Widget->create();
+			if ($this->Widget->save($this->data)) {
+				$this->Session->setFlash(__('The widget has been saved', true));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
+			}
+		}
+		if (empty($this->data)) {
+			$this->data = $this->Widget->read(null, $id);
+		}
+		$groups = $this->Widget->Group->find('list');
+		$this->set(compact('groups'));
+	}
+
 	function delete($id = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid id for widget', true));

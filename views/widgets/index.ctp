@@ -34,6 +34,7 @@
 		<td class="actions">
 			<?php echo $this->Html->link(__('View', true), array('action' => 'view', $widget['Widget']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit', true), array('action' => 'edit', $widget['Widget']['id'])); ?>
+			<?php echo $this->Html->link(__('Duplicate', true), array('action' => 'duplicate', $widget['Widget']['id'])); ?>
 			<?php echo $this->Html->link(__('Delete', true), array('action' => 'delete', $widget['Widget']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $widget['Widget']['id'])); ?>
 		</td>
 	</tr>
