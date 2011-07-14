@@ -11,21 +11,6 @@
 
         echo $this->Grp->li($group);
         
-        /*
-	?>
-	<tr<?php echo $class;?>>
-		<td><?php echo $group['Group']['id']; ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($group['ParentGroup']['name'], array('controller' => 'groups', 'action' => 'view', $group['ParentGroup']['id'])); ?>
-		</td>
-		<td><?php echo $group['Group']['name']; ?>&nbsp;</td>
-		<td><?php echo $group['Group']['description']; ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View', true), array('action' => 'view', $group['Group']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit', true), array('action' => 'edit', $group['Group']['id'])); ?>
-			<?php echo $this->Html->link(__('Delete', true), array('action' => 'delete', $group['Group']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $group['Group']['id'])); ?>
-		</td>
-	</tr> */
     endforeach; ?>
 	</ul>
 </div>

@@ -71,7 +71,7 @@ class GrpHelper extends AppHelper {
 
     function actions($group) {
         $actions = $this->Html->link(__('View', true), 
-                array('action' => 'view', $group['Group']['id'], $group['Group']['slug'])) . " ";
+                array('action' => 'view', $group['Group']['slug'])) . " ";
         $actions .= $this->Html->link(__('Edit', true), 
                 array('action' => 'edit', $group['Group']['id'])) . " ";
         $actions .= $this->Html->link(__('Delete', true), 

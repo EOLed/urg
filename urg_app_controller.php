@@ -40,6 +40,7 @@ class UrgAppController extends AppController {
         Configure::write("Config.language", $language);
         $this->log("Setting language to: $language", LOG_DEBUG);
         $this->Session->write("Config.language", $language);
+        $this->Session->write("Config.lang", $this->params["lang"]);
     }
 
     function log($msg, $type = LOG_ERROR) {
