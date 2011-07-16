@@ -14,45 +14,38 @@
         <div><?php echo $group["Group"]["name"]?></div>
     </div>
 
-    <div id="col-1" class="grid_4 right-border view-col">
+    <?php
+    $columns = array();
+    if (!isset($widgets["layout"])) {
+        $columns["col-0"] = "grid_4 right-border";
+        $columns["col-1"] = "grid_4 right-border";
+        $columns["col-2"] = "grid_4";
+    } else {
+        $layout_widget = $widgets["layout"];
+        $options = array();
+        foreach ($this->{$layout_widget["Widget"]["helper_name"]}->widget_options as $option) {
+            $options[$option] = ${$option . "_" . $layout_widget["Widget"]["id"]};
+        }
+        $this->{$layout_widget["Widget"]["helper_name"]}->build($options);
+
+        $columns = $this->{$layout_widget["Widget"]["helper_name"]}->get_columns();
+    }
+
+    foreach ($columns as $column_id => $column_class) { ?>
+    <div id="<?php echo $column_id ?>" class="<?php echo $column_class ?>">
         <?php 
-        if (isset($widgets[0])) {
-            foreach ($widgets[0] as $widget) {
+        if (isset($widgets[$column_id])) {
+            foreach ($widgets[$column_id] as $widget) {
                 $options = array();
                 foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                     $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
                 }
-                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+                echo $this->Html->div("post-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
             }
         }
         ?>
     </div>
-    <div id="col-2" class="grid_4 right-border view-col">
-        <?php 
-        if (isset($widgets[1])) {
-            foreach ($widgets[1] as $widget) {
-                $options = array();
-                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
-                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
-                }
-                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
-            }
-        }
-        ?>
-    </div>
-    <div id="col-3" class="grid_4 view-col">
-        <?php 
-        if (isset($widgets[2])) {
-            foreach ($widgets[2] as $widget) {
-                $options = array();
-                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
-                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
-                }
-                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
-            }
-        }
-        ?>
-    </div>
+    <?php } ?>
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
