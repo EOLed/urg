@@ -1,8 +1,9 @@
 <?php
+App::import("Model", "Urg.Widget");
 class WidgetUtilComponent extends Object {
     var $controller;
     var $settings = null; 
-    var $components = array("FlyLoader");
+    var $components = array("Session","FlyLoader");
 
     function initialize(&$controller, $settings = array()) {
         $this->controller =& $controller;
@@ -57,6 +58,8 @@ class WidgetUtilComponent extends Object {
 
         $widget_list = array();
         foreach ($widgets as $widget) {
+            CakeLog::write("debug", 
+                           "loading current widget: " . Debugger::exportVar($widget, 3));
             foreach ($vars as $key => $value) {
                 $widget["Widget"]["options"] = 
                         str_replace('${' . $key . '}', 

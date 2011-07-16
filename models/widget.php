@@ -1,7 +1,10 @@
 <?php
-class Widget extends AppModel {
+class Widget extends UrgAppModel {
 	var $name = 'Widget';
 	var $displayField = 'name';
+    var $actsAs = array(
+        "Translate" => array("options" => "i18nOptions")
+    );
 	var $validate = array(
 		'group_id' => array(
 			'numeric' => array(

@@ -1,5 +1,5 @@
 <?php
-class WidgetsController extends AppController {
+class WidgetsController extends UrgAppController {
 
 	var $name = 'Widgets';
 

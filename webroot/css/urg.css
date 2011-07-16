@@ -33,6 +33,38 @@ div.group-widget {
     padding-bottom: 15px;
 }
 
+.page-title {
+    /* assume all items will be sounds rather than wait for onload etc. in this example.. may differ for your uses. */
+    position:relative; 
+    display:block; 
+    font-size:36px; 
+    color:#666; 
+    padding:0.25em 0.5em 0.25em 0.5em; 
+    border:none; 
+    letter-spacing:-1px; /* ZOMG WEB X.0. ;) */ 
+    background-color:#f9f9f9; 
+    
+    -webkit-transition-property: hover; 
+    -webkit-transition: background-color 0.15s ease-in-out; 
+    
+    -moz-transition: background-color 0.15s linear 0s; /* firefox 4 */ 
+
+    -o-transition-property: background-color; /* opera 10.5 */ 
+    -o-transition-duration: 0.15s;
+
+    list-style-type:none; 
+    margin: 20px 0px 10px 0px; 
+    padding: 10px; 
+
+    display:block; 
+    text-decoration:none; 
+    font-weight:normal; 
+    color:#000; 
+    font-size: 32px; 
+    outline:none; 
+    position:relative; 
+    z-index:2; 
+}
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 

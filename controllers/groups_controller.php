@@ -3,6 +3,7 @@ App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "Urg.Grp");
 App::import("Component", "Urg.WidgetUtil");
 App::import("Model", "UrgPost.Post");
+App::import("Model", "Urg.Group");
 class GroupsController extends UrgAppController {
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
@@ -56,6 +57,32 @@ class GroupsController extends UrgAppController {
 		$this->set("parents", $parents);
 	}
 
+	function translate($id = null) {
+		if (!$id && empty($this->data)) {
+			$this->Session->setFlash(__('Invalid group', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		if (!empty($this->data)) {
+            $this->Group->locale = $this->data["Group"]["locale"];
+			if ($this->Group->save($this->data)) {
+				$this->Session->setFlash(__('The group has been saved', true));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
+			}
+		}
+		if (empty($this->data)) {
+			$this->data = $this->Group->read(null, $id);
+            $this->log("viewing group for translation: " .  Debugger::exportVar($this->data, 4), 
+                       LOG_DEBUG);
+		}
+
+		$parents = $this->Group->ParentGroup->find('list');
+
+		$this->set("parents", $parents);
+        $this->set_locales();
+	}
+
 	function delete($id = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid id for group', true));
@@ -83,9 +110,26 @@ class GroupsController extends UrgAppController {
         $widget_list = $this->prepare_widgets($widgets);
 
         $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
-        $about = $this->get_about("Montreal Chinese Alliance Church");
+
+        $this->Group->locale = "en_us";
+        $mcac = $this->Group->find("first", array("conditions" => array("I18n__name.content" => "Montreal Chinese Alliance Church")));
+        $l10n_name = null;
+
+        $locales = $this->build_locales();
+        $l10n = new L10n();
+        $current_catalog = $l10n->catalog($this->Session->read("Config.language"));
+
+        foreach ($mcac["i18nName"] as $name) {
+            if ($name["locale"] == $current_catalog["locale"]) {
+                $l10n_name = $name["content"];
+                break;
+            }
+        }
+
+        $about = $this->get_about($name);
         $this->set("about", $about);
         $about_group = $this->get_about($group["Group"]["name"]);
+        $this->log("about group: " . Debugger::exportVar($about_group), LOG_DEBUG);
         $this->set('group', $group);
 
         $banners = $this->get_banners($about_group);
@@ -142,35 +186,18 @@ class GroupsController extends UrgAppController {
     function get_about($name) {
         $this->loadModel("UrgPost.Post");
 
-        $about_group = $this->Group->findByName("About");
+        $about_group = $this->Group->find("first", 
+                array("conditions" => array("I18n__name.content" => "About")));
        
         $this->Post->bindModel(array("belongsTo" => array("Group")));
         $this->Post->bindModel(array("hasMany" => array("Attachment")));
 
         $about = $this->Post->find("first", 
-                array("conditions" => 
-                        array("OR" => array(
-                                "Group.name" => "About", 
-                                "Group.parent_id" => $about_group["Group"]["id"]),
-                              "AND" => array("I18n__title.content" => $name)
-                        ),
+                array("conditions" => array("I18n__title.content" => $name,
+                                            "Group.id" => $about_group["Group"]["id"]),
                       "order" => "Post.publish_timestamp DESC"
                 )
         );
-
-        if ($about === false) {
-            $this->Post->bindModel(array("belongsTo" => array("Group")));
-            $this->Post->bindModel(array("hasMany" => array("Attachment")));
-
-            $about = $this->Post->find("first", 
-                array("conditions" => 
-                        array(
-                            "AND" => array("I18n__title.content" => "About", "Group.name" => $name)
-                        ),
-                      "order" => "Post.publish_timestamp DESC"
-                )
-            );
-        }
 
         $this->log("about for group: $name" .  Debugger::exportVar($about, 3), LOG_DEBUG);
 

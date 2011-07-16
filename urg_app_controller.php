@@ -43,6 +43,25 @@ class UrgAppController extends AppController {
         $this->Session->write("Config.lang", $this->params["lang"]);
     }
 
+    function set_locales() {
+        $this->set("locales", $this->build_locales());
+    }
+
+    function build_locales() {
+        $languages = Configure::read("Language");
+        unset($languages["default"]);
+
+        $locales = array();
+        $l10n = new L10n();
+
+        foreach ($languages as $lang_key=>$lang) {
+            $catalog = $l10n->catalog($lang);
+            $locales[$catalog["locale"]] = __($catalog["language"], true);
+        }
+
+        return $locales;
+    }
+
     function log($msg, $type = LOG_ERROR) {
     	$trace = debug_backtrace();
         parent::log("[" . $this->toString() . "::" . $trace[1]["function"] . "()] $msg", $type);
