@@ -32,14 +32,18 @@ class WidgetUtilComponent extends Object {
         $url = $this->url();
         $this->log("loading widgets for $url", LOG_DEBUG); 
         $this->controller->loadModel("Group");
+
+        //attempt to load widgets associated to group
         $widgets = $this->controller->Group->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
                                       "Widget.action" => $url),
                 "order" => "Widget.placement"
         ));
 
-        $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
+        CakeLog::write("debug", 
+                       "widgets associated to group $group_id: " . Debugger::exportVar($widgets, 3));
 
+        //if there are none, get widgets associated to parent
         while (empty($widgets)) {
             $parent = $this->controller->Group->getparentnode($group_id);
             CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
@@ -66,7 +70,12 @@ class WidgetUtilComponent extends Object {
                                     is_numeric($value) ? $value : "\"$value\"", 
                                     $widget["Widget"]["options"]);
             }
+
             $widget_settings = json_decode($widget["Widget"]["options"], true);
+
+            if ($widget_settings == null) {
+                CakeLog::write("error", "widget " . $widget["Widget"]["id"] . " is invalid.");
+            }
 
             $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
             if (property_exists($this->controller, $component) &&

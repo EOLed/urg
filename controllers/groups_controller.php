@@ -101,18 +101,16 @@ class GroupsController extends UrgAppController {
             $slug = $this->params["group_slug"];
         }
 
-        $this->log("viewing group...", LOG_DEBUG);
         $group = $this->Group->findBySlug($slug);
+        $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
 
         $widgets = $this->WidgetUtil->load($group["Group"]["id"], 
                                            array('group_id' => $group["Group"]["id"]));
-        $this->log("widgets: " . Debugger::exportVar($widgets, 3), LOG_DEBUG);
         $widget_list = $this->prepare_widgets($widgets);
 
-        $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
-
         $this->Group->locale = "en_us";
-        $mcac = $this->Group->find("first", array("conditions" => array("I18n__name.content" => "Montreal Chinese Alliance Church")));
+        $mcac = $this->Group->find("first", 
+                array("conditions" => array("I18n__name.content" => "Montreal Chinese Alliance Church")));
         $l10n_name = null;
 
         $locales = $this->build_locales();
@@ -144,7 +142,6 @@ class GroupsController extends UrgAppController {
     }
 
     function prepare_widgets($widgets) {
-        $this->log("preparing widgets...", LOG_DEBUG);
         $widget_list = array();
         foreach ($widgets as $widget) {
             if (strpos($widget["Widget"]["placement"], "|") === false) {
@@ -155,7 +152,7 @@ class GroupsController extends UrgAppController {
             }
         }
 
-        $this->log("widget list: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
+        $this->log("prepared widgets: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
 
         return $widget_list;
     }
