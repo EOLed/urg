@@ -12,10 +12,9 @@ App::import("Lib", "Urg.AbstractWidgetComponent");
  *                      $columns-1.
  */
 class ColumnLayoutComponent extends AbstractWidgetComponent {
-    var $columns = array();
-
     function build_widget() {
         $options = array();
+        $columns = array();
 
         for ($i = 0; $i < $this->widget_settings["columns"]; $i++) {
             $columns["col-$i"] = $this->widget_settings["col-$i"];

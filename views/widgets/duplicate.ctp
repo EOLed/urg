@@ -7,7 +7,7 @@
 		echo $this->Form->input('name');
 		echo $this->Form->input('action');
 		echo $this->Form->input('placement');
-		echo $this->Form->input('options');
+		echo $this->Form->input('options', array("type" => "textarea"));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>

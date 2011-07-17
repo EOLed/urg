@@ -23,7 +23,7 @@
 	<tr<?php echo $class;?>>
 		<td><?php echo $widget['Widget']['id']; ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($widget['Group']['name'], array('controller' => 'groups', 'action' => 'view', $widget['Group']['id'])); ?>
+			<?php echo $this->Html->link($widget['Group']['slug'], array('controller' => 'groups', 'action' => 'view', $widget['Group']['id'])); ?>
 		</td>
 		<td><?php echo $widget['Widget']['name']; ?>&nbsp;</td>
 		<td><?php echo $widget['Widget']['action']; ?>&nbsp;</td>
