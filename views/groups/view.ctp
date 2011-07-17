@@ -32,7 +32,7 @@
     }
 
     foreach ($columns as $column_id => $column_class) { ?>
-    <div id="<?php echo $column_id ?>" class="<?php echo $column_class ?>">
+    <div id="<?php echo $column_id ?>" class="group-col <?php echo $column_class ?>">
         <?php 
         if (isset($widgets[$column_id])) {
             foreach ($widgets[$column_id] as $widget) {
@@ -49,5 +49,5 @@
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
-$(".view-col").equalHeight();
+$(".group-col").equalHeight();
 </script>
