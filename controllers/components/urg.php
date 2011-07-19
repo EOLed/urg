@@ -84,4 +84,21 @@ class UrgComponent extends Object {
 
 		return $access;
 	}
+
+    function get_locales() {
+        $locales = $this->Session->read("Config.locales");
+        if ($locales == null) {
+            $languages = Configure::read("Language");
+            unset($languages["default"]);
+
+            $l10n = new L10n();
+
+            foreach ($languages as $lang_key=>$lang) {
+                $catalog = $l10n->catalog($lang);
+                $locales[$catalog["locale"]] = __($catalog["language"], true);
+            }
+        }
+
+        return $locales;
+    }
 }
