@@ -75,18 +75,33 @@ class WidgetsController extends UrgAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->data)) {
-            $this->Widget->create();
-			if ($this->Widget->save($this->data)) {
-				$this->Session->setFlash(__('The widget has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
-			}
+            $locales = $this->Session->read("Config.locales");
+            foreach ($locales as $locale => $catalog) {
+                $this->Widget->locale = $locale;
+                $this->data["Widget"]["options"] = $this->data["Widget"]["options_$locale"];
+                $this->Widget->create();
+                $success = $this->Widget->save($this->data);
+                if (!$success) {
+                    $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
+                    break;
+                }
+            }
+
+            if ($success) {
+                $this->Session->setFlash(__('The widget has been saved', true));
+                $this->redirect(array('action' => 'index'));
+            }
 		}
 		if (empty($this->data)) {
-			$this->data = $this->Widget->read(null, $id);
+			$this->data = $this->Widget->find("first", 
+                                              array("conditions" => array("Widget.id" => $id)));
+            $this->data["Widget"]["group_id"] = null;
+            foreach ($this->data["i18nOptions"] as $options) {
+                $this->data["Widget"]["options_" . $options["locale"]] = $options["content"];
+                $this->log("adding option: " . $options["locale"], LOG_DEBUG);
+            }
 		}
-		$groups = $this->Widget->Group->find('list');
+		$groups = $this->Widget->Group->find('list', array("order" => "I18n__name.content"));
 		$this->set(compact('groups'));
 	}
 
