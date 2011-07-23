@@ -1,6 +1,6 @@
 <?php
 /**
- * An Abstract Widget class to facilitate widget creation.
+ * An Abstract Widget Component class to facilitate widget creation.
  */
 
 require_once("i_widget_component.php");
@@ -8,6 +8,7 @@ abstract class AbstractWidgetComponent extends Object implements IWidgetComponen
     var $controller = null;
     var $widget_id = null;
     var $widget_settings = null;
+    var $helper_options = array();
 
     abstract function build_widget();
 
@@ -22,10 +23,20 @@ abstract class AbstractWidgetComponent extends Object implements IWidgetComponen
         $this->widget_id = $widget_id;
         $this->widget_settings = $this->settings[$widget_id];
 
-        $this->build_widget();
+        $widget = $this->build_widget();
+
+        $this->controller->set("options_{$this->widget_id}", $this->helper_options);
+
+        return $widget;
     }
 
+    /**
+     * convenience method to queue variables to be set into the controller's view.
+     *
+     * @param string $var_name
+     * @param mixed $var
+     */
     function set($var_name, $var) {
-        $this->controller->set($var_name . "_" . $this->widget_id, $var);
+        $this->helper_options[$var_name] = $var;
     }
 }

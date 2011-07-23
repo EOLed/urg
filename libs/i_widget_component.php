@@ -1,6 +1,6 @@
 <?php
 /**
- * Widget Interface to create widgets for Urg views.
+ * Widget Component Interface to create widgets for Urg views.
  */
 interface IWidgetComponent {
     /**

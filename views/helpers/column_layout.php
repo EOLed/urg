@@ -1,11 +1,10 @@
 <?php
-class ColumnLayoutHelper extends AppHelper {
+App::import("Lib", "Urg.AbstractWidgetHelper");
+class ColumnLayoutHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time");
-    var $widget_options = array("columns");
-    var $options = null;
 
-    function build($options = array()) {
-        $this->options = $options;
+    function build_widget() {
+        return null;
     }
 
     function get_columns() {

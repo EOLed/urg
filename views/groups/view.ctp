@@ -22,12 +22,8 @@
         $columns["col-2"] = "grid_4";
     } else {
         $layout_widget = $widgets["layout"];
-        $options = array();
-        foreach ($this->{$layout_widget["Widget"]["helper_name"]}->widget_options as $option) {
-            $options[$option] = ${$option . "_" . $layout_widget["Widget"]["id"]};
-        }
-        $this->{$layout_widget["Widget"]["helper_name"]}->build($options);
-
+        $this->{$layout_widget["Widget"]["helper_name"]}->build(${"options_" . 
+                                                                $layout_widget["Widget"]["id"]});
         $columns = $this->{$layout_widget["Widget"]["helper_name"]}->get_columns();
     }
 
@@ -36,11 +32,9 @@
         <?php 
         if (isset($widgets[$column_id])) {
             foreach ($widgets[$column_id] as $widget) {
-                $options = array();
-                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
-                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
-                }
-                echo $this->Html->div("post-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+                $widget = $this->{$widget["Widget"]["helper_name"]}->build(${"options_" . 
+                          $widget["Widget"]["id"]});
+                echo $this->Html->div("post-widget", $widget);
             }
         }
         ?>
