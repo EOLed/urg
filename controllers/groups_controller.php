@@ -113,7 +113,7 @@ class GroupsController extends UrgAppController {
                 array("conditions" => array("I18n__name.content" => "Montreal Chinese Alliance Church")));
         $l10n_name = null;
 
-        $locales = $this->Urg->build_locales();
+        $locales = $this->Urg->get_locales();
         $l10n = new L10n();
         $current_catalog = $l10n->catalog($this->Session->read("Config.language"));
 
