@@ -5,9 +5,14 @@
         <?php echo $this->Html->image($banner, array("class"=>"shadow")); ?>
     </div>
     <?php } ?>
-    <div id="about-panel" class="grid_3">
-        <h3><?php echo strtoupper(__("About us", true)); ?></h3>
-        <?php echo $about["Post"]["content"] ?>
+    <div id="side-panel" class="grid_3">
+    <?php
+        if (isset($widgets["side"])) {
+            $side = $widgets["side"];
+            echo $this->{$side["Widget"]["helper_name"]}->build(${"options_" .  
+                                                                  $side["Widget"]["id"]});
+        }
+    ?>
     </div>
 
     <div id='group-name' class='grid_12 page-title'>

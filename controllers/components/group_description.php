@@ -12,7 +12,17 @@ class GroupDescriptionComponent extends AbstractWidgetComponent {
     function build_widget() {
         $options = array();
 
-        $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+        $original_group = $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+
+        while ($group["Group"]["description"] == "") {
+            $group = $this->controller->Group->getparentnode($group["Group"]["id"]);
+            CakeLog::write("debug", "parent of group (" . $group["Group"]["id"] . "): " . 
+                                    Debugger::exportVar($parent, 3));
+
+            if ($group === false) {
+                break;
+            }
+        }
 
         if (!isset($this->widget_settings["title"])) {
             $this->widget_settings["title"] = $group["Group"]["name"];
