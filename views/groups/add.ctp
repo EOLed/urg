@@ -6,11 +6,11 @@
 	<fieldset>
  		<legend><?php __('Add Group'); ?></legend>
 	<?php
-		echo $this->Form->hidden('parent_id');//, array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
+		echo $this->Form->hidden('parent_id');
         echo $this->Slug->slug("name", "slug", 
                 array("slug_prefix" => "http://montreal-cac.org/urg_group/groups/", 
                       "auto_update" => true));
-		echo $this->Form->input('description');
+		echo $this->Form->input('description', array("type" => "textarea"));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>
