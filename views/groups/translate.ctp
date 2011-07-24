@@ -4,7 +4,7 @@
 <div class="groups form grid_6 suffix_6">
 <?php echo $this->Form->create('Group');?>
 	<fieldset>
- 		<legend><?php __('Edit Group'); ?></legend>
+ 		<legend><?php __('Translate Group'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->hidden('parent_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
