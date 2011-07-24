@@ -11,7 +11,7 @@
         echo $this->Slug->slug("name", "slug", 
                 array("slug_prefix" => "http://montreal-cac.org/urg_group/groups/", 
                       "auto_update" => false));
-		echo $this->Form->input('description');
+		echo $this->Form->input('description', array("type" => "textrea"));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>
