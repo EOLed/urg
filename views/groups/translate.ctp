@@ -7,12 +7,12 @@
  		<legend><?php __('Translate Group'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->hidden('parent_id', array("label"=>__("Parent Group", true), "empty"=>__("No Parent", true)));
+		echo $this->Form->hidden('parent_id');
         echo $this->Form->input('Group.locale', array("type" => "select", 
                                                       "label" => __("Language", true),
                                                       "options" => $locales));
-		echo $this->Form->input('name');
-		echo $this->Form->input('description', array("type"=>"textarea"));
+		echo $this->Form->input('name', array("between" => $this->data["Translation"]["Group"]["name"]));
+		echo $this->Form->input('description', array("type"=>"textarea", "between" => $this->data["Translation"]["Group"]["description"]));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>

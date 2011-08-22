@@ -44,9 +44,6 @@ class UrgAppController extends AppController {
         $this->Session->write("Config.locales", $this->Urg->get_locales());
     }
 
-    function set_locales() {
-        $this->set("locales", $this->Session->read("Config.locales"));
-    }
 
 
     function log($msg, $type = LOG_ERROR) {

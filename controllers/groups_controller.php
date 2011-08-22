@@ -5,8 +5,8 @@ App::import("Component", "Urg.WidgetUtil");
 App::import("Model", "UrgPost.Post");
 App::import("Model", "Urg.Group");
 App::import("Component", "FlyLoader");
-class GroupsController extends UrgAppController {
-
+App::import("Lib", "Urg.TranslatableController");
+class GroupsController extends TranslatableController {
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
     var $helpers = array("Html", "Form", "Slug", "Grp");
@@ -26,10 +26,13 @@ class GroupsController extends UrgAppController {
 				$this->Session->setFlash(__('The group has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__('The group could not be saved. Please, try again.', 
+                                            true));
 			}
 		} else if ($parent_id != null) {
             $this->data["Group"]["parent_id"] = $parent_id;
+            $parent_group = $this->Group->findById($parent_id);
+            $this->data["ParentGroup"] = $parent_group["Group"];
         }
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups', 'groups'));
@@ -45,7 +48,8 @@ class GroupsController extends UrgAppController {
 				$this->Session->setFlash(__('The group has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__('The group could not be saved. Please, try again.', 
+                                            true));
 			}
 		}
 		if (empty($this->data)) {
@@ -58,31 +62,6 @@ class GroupsController extends UrgAppController {
 		$this->set("parents", $parents);
 	}
 
-	function translate($id = null) {
-		if (!$id && empty($this->data)) {
-			$this->Session->setFlash(__('Invalid group', true));
-			$this->redirect(array('action' => 'index'));
-		}
-		if (!empty($this->data)) {
-            $this->Group->locale = $this->data["Group"]["locale"];
-			if ($this->Group->save($this->data)) {
-				$this->Session->setFlash(__('The group has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The group could not be saved. Please, try again.', true));
-			}
-		}
-		if (empty($this->data)) {
-			$this->data = $this->Group->read(null, $id);
-            $this->log("viewing group for translation: " .  Debugger::exportVar($this->data, 4), 
-                       LOG_DEBUG);
-		}
-
-		$parents = $this->Group->ParentGroup->find('list');
-
-		$this->set("parents", $parents);
-        $this->set_locales();
-	}
 
 	function delete($id = null) {
 		if (!$id) {
@@ -109,9 +88,9 @@ class GroupsController extends UrgAppController {
                                            array('group_id' => $group["Group"]["id"]));
         $widget_list = $this->prepare_widgets($widgets);
 
-        $this->Group->locale = "en_us";
+        $this->Group->locale = array("en_us");
         $mcac = $this->Group->find("first", 
-                array("conditions" => array("I18n__name.content" => "Montreal Chinese Alliance Church")));
+                array("conditions" => array("I18n__name__en_us.content" => "Montreal Chinese Alliance Church")));
         $l10n_name = null;
 
         $locales = $this->Urg->get_locales();
@@ -146,6 +125,11 @@ class GroupsController extends UrgAppController {
         $this->log("prepared widgets: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
 
         return $widget_list;
+    }
+
+    function translate($slug = null, $original_locale = null) {
+        parent::translate($slug, $original_locale);
+        $this->data["Group"]["parent_id"] = $this->data["Translation"]["Group"]["parent_id"];
     }
 }
 ?>

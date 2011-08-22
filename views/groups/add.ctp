@@ -7,9 +7,12 @@
  		<legend><?php __('Add Group'); ?></legend>
 	<?php
 		echo $this->Form->hidden('parent_id');
-        echo $this->Slug->slug("name", "slug", 
-                array("slug_prefix" => "http://montreal-cac.org/urg_group/groups/", 
-                      "auto_update" => true));
+        $slug_options = array("auto_update" => true,
+                              "base_url" => "http://montreal-cac.org/urg_group/groups/");
+        if (isset($this->data["ParentGroup"])) {
+            $slug_options["slug_prefix"] = $this->data["ParentGroup"]["slug"] . "-";
+        }
+        echo $this->Slug->slug("name", "slug", $slug_options); 
 		echo $this->Form->input('description', array("type" => "textarea"));
 	?>
 	</fieldset>

@@ -1,5 +1,6 @@
 <?php
-class WidgetsController extends UrgAppController {
+App::import("Lib", "Urg.TranslatableController");
+class WidgetsController extends TranslatableController {
 
 	var $name = 'Widgets';
 
