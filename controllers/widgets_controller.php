@@ -77,11 +77,21 @@ class WidgetsController extends TranslatableController {
 		}
 		if (!empty($this->data)) {
             $locales = $this->Session->read("Config.locales");
+            $widget_id = null;
             foreach ($locales as $locale => $catalog) {
                 $this->Widget->locale = $locale;
                 $this->data["Widget"]["options"] = $this->data["Widget"]["options_$locale"];
                 $this->Widget->create();
+                if ($widget_id != null) {
+                    $this->data["Widget"]["id"] = $widget_id;
+                }
+
                 $success = $this->Widget->save($this->data);
+                if ($widget_id == null)
+                {
+                    $widget_id = $this->Widget->id;
+                }
+
                 if (!$success) {
                     $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
                     break;
