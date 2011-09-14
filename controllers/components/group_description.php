@@ -16,8 +16,6 @@ class GroupDescriptionComponent extends AbstractWidgetComponent {
 
         while ($group["Group"]["description"] == "") {
             $group = $this->controller->Group->getparentnode($group["Group"]["id"]);
-            CakeLog::write("debug", "parent of group (" . $group["Group"]["id"] . "): " . 
-                                    Debugger::exportVar($parent, 3));
 
             if ($group === false) {
                 break;

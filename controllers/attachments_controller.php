@@ -79,14 +79,16 @@ class AttachmentsController extends UrgAppController {
             $this->set("group", $group);
             $this->set("group_slug", $group_slug);
         } else {
-            $group = $this->Group->findBySlug($group_slug);
+            $group = $this->Group->findBySlug($this->data["Attachment"]["group_slug"]);
+            CakeLog::write("debug", "Creating banner for group: " . Debugger::exportVar($group, 3));
             $uploaded_banner = $this->data["Attachment"]["banner"];
             $this->data["Attachment"]["filename"] = $uploaded_banner["name"];
             $user = $this->Auth->user();
             $this->data["Attachment"]["user_id"] = $user["User"]["id"];
             $this->data["Attachment"]["attachment_type_id"] = $banner_type["AttachmentType"]["id"];
             if ($this->Attachment->saveAll($this->data)) {
-                $target_path = $this->get_doc_root($this->BANNER_FOLDER) . "/" . $this->Attachment->id;
+                $target_path = $this->get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"];
+                CakeLog::write("debug", "Target path: $target_path");
                 if (!file_exists($target_path)) {
                     CakeLog::write("debug", "Creating directory: $target_path");
                     $old = umask(0);
@@ -95,7 +97,7 @@ class AttachmentsController extends UrgAppController {
                 }
 
                 move_uploaded_file($uploaded_banner["tmp_name"], 
-                                   $this->get_doc_root($this->BANNER_FOLDER) . "/" . $this->Attachment->id . "/" . 
+                                   $this->get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"] . "/" . 
                                    $uploaded_banner["name"]);
 
                 $this->redirect(array("plugin" => "urg", 

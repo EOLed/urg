@@ -9,9 +9,13 @@ class GroupBannerHelper extends AppHelper {
         $widget = "";
 
         foreach ($banners as $banner) {
-            $widget .= $this->Html->div("banner", $this->Html->image("/urg/img/banners/" . 
-                                                                     $banner["Attachment"]["id"] . "/" . 
-                                                                     $banner["Attachment"]["filename"]));
+            foreach ($banner["AttachmentMetadatum"] as $meta) {
+                if (strcmp($meta["key"], "group_id") == 0) {
+                    $widget .= $this->Html->div("banner", $this->Html->image("/urg/img/banners/$meta[value]/" . 
+                                                                             $banner["Attachment"]["filename"]));
+                    break;
+                }
+            }
         }
 
         return $widget;

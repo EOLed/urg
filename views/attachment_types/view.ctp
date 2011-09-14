@@ -46,7 +46,6 @@
 	<tr>
 		<th><?php __('Id'); ?></th>
 		<th><?php __('Attachment Type Id'); ?></th>
-		<th><?php __('Post Id'); ?></th>
 		<th><?php __('User Id'); ?></th>
 		<th><?php __('Filename'); ?></th>
 		<th><?php __('Created'); ?></th>
@@ -64,7 +63,6 @@
 		<tr<?php echo $class;?>>
 			<td><?php echo $attachment['id'];?></td>
 			<td><?php echo $attachment['attachment_type_id'];?></td>
-			<td><?php echo $attachment['post_id'];?></td>
 			<td><?php echo $attachment['user_id'];?></td>
 			<td><?php echo $attachment['filename'];?></td>
 			<td><?php echo $attachment['created'];?></td>

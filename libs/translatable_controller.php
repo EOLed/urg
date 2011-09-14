@@ -47,7 +47,8 @@ class TranslatableController extends UrgAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->data)) {
-            $this->Group->locale = $this->data[$model_class]["locale"];
+            $this->{$model_class}->locale = $this->data[$model_class]["locale"];
+            $this->log("saving translatable data: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
 			if ($this->{$model_class}->save($this->data)) {
 				$this->Session->setFlash(__("The $model_name has been saved", true));
 				$this->redirect(array('action' => 'index'));

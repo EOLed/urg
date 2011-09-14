@@ -16,6 +16,20 @@ class GroupBannerComponent extends AbstractWidgetComponent {
         $group_id = $this->widget_settings["group_id"];
         $banners = $this->get_banners($group_id);
 
+        $this->set_banners($banners);
+    }
+
+    function get_banners($group_id) {
+        $banners = false;
+        $this->controller->loadModel("Urg.AttachmentMetadatum");
+        $meta = $this->controller->AttachmentMetadatum->find("first", array("conditions" => array(
+                "AttachmentMetadatum.key" => "group_id",
+                "AttachmentMetadatum.value" => $group_id), "order" => "created DESC"));
+
+        if (!empty($meta)) {
+            $banners = $this->controller->Attachment->findAllById($meta["AttachmentMetadatum"]["attachment_id"]);
+        }
+
         while ($banners === false) {
             $parent = $this->controller->Group->getparentnode($group_id);
 
@@ -26,20 +40,6 @@ class GroupBannerComponent extends AbstractWidgetComponent {
                 $banners = array();
                 break;
             }
-        }
-
-        $this->set_banners($banners);
-    }
-
-    function get_banners($group_id) {
-        $banners = false;
-        $this->controller->loadModel("Urg.AttachmentMetadatum");
-        $meta = $this->controller->AttachmentMetadatum->find("first", array("conditions" => array(
-                "AttachmentMetadatum.key" => "group_id",
-                "AttachmentMetadatum.value" => $group_id)));
-
-        if (!empty($meta)) {
-            $banners = $this->controller->Attachment->findAllById($meta["AttachmentMetadatum"]["attachment_id"]);
         }
 
         return $banners;
@@ -65,8 +65,15 @@ class GroupBannerComponent extends AbstractWidgetComponent {
     function get_image_path($attachment, $width, $height = 0) {
         $this->controller->FlyLoader->load("Component", "ImgLib.ImgLib");
         //TODO fix FlyLoader... should refer to it within component.
-        $full_image_path = $this->controller->ImgLib->get_doc_root($this->BANNERS) .  "/" .  
-                $attachment["Attachment"]["id"];
+        CakeLog::write("debug", "getting image path for attachment: " . Debugger::exportVar($attachment,3));
+        $full_image_path = null;
+        foreach ($attachment["AttachmentMetadatum"] as $meta) {
+            if (strcmp($meta["key"], "group_id") == 0) {
+                $full_image_path = $this->controller->ImgLib->get_doc_root($this->BANNERS) .  "/" .  
+                        $meta["value"];
+                break;
+            }
+        }
         $image = $this->controller->ImgLib->get_image("$full_image_path/" . $attachment["Attachment"]["filename"], 
                                           $width, 
                                           $height, 
