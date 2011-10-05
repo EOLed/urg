@@ -1,7 +1,6 @@
 <?php
 App::import("Lib", "Urg.TranslatableController");
-class WidgetsController extends TranslatableController {
-
+class WidgetsController extends UrgAppController {
 	var $name = 'Widgets';
 
 	function index() {
@@ -42,15 +41,11 @@ class WidgetsController extends TranslatableController {
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->data)) {
-            $locales = $this->Session->read("Config.locales");
-            foreach ($locales as $locale => $catalog) {
-                $this->Widget->locale = $locale;
-                $this->data["Widget"]["options"] = $this->data["Widget"]["options_$locale"];
-                $success = $this->Widget->save($this->data);
-                if (!$success) {
-                    $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
-                    break;
-                }
+            $this->data["Widget"]["options"] = $this->data["Widget"]["options"];
+            $success = $this->Widget->save($this->data);
+            if (!$success) {
+                $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
+                break;
             }
 
             if ($success) {
@@ -61,10 +56,6 @@ class WidgetsController extends TranslatableController {
 		if (empty($this->data)) {
 			$this->data = $this->Widget->find("first", 
                                               array("conditions" => array("Widget.id" => $id)));
-            foreach ($this->data["i18nOptions"] as $options) {
-                $this->data["Widget"]["options_" . $options["locale"]] = $options["content"];
-                $this->log("adding option: " . $options["locale"], LOG_DEBUG);
-            }
 		}
 		$groups = $this->Widget->Group->find('list');
 		$this->set(compact('groups'));
@@ -75,44 +66,23 @@ class WidgetsController extends TranslatableController {
 			$this->Session->setFlash(__('Invalid widget', true));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
-            $locales = $this->Session->read("Config.locales");
-            $widget_id = null;
-            foreach ($locales as $locale => $catalog) {
-                $this->Widget->locale = $locale;
-                $this->data["Widget"]["options"] = $this->data["Widget"]["options_$locale"];
-                $this->Widget->create();
-                if ($widget_id != null) {
-                    $this->data["Widget"]["id"] = $widget_id;
-                }
-
-                $success = $this->Widget->save($this->data);
-                if ($widget_id == null)
-                {
-                    $widget_id = $this->Widget->id;
-                }
-
-                if (!$success) {
-                    $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
-                    break;
-                }
-            }
-
-            if ($success) {
-                $this->Session->setFlash(__('The widget has been saved', true));
-                $this->redirect(array('action' => 'index'));
-            }
-		}
 		if (empty($this->data)) {
 			$this->data = $this->Widget->find("first", 
                                               array("conditions" => array("Widget.id" => $id)));
             $this->data["Widget"]["group_id"] = null;
-            foreach ($this->data["i18nOptions"] as $options) {
-                $this->data["Widget"]["options_" . $options["locale"]] = $options["content"];
-                $this->log("adding option: " . $options["locale"], LOG_DEBUG);
+		} else {
+            $this->Widget->create();
+
+            $success = $this->Widget->save($this->data);
+
+            if ($this->Widget->save($this->data)) {
+                $this->Session->setFlash(__('The widget has been saved', true));
+                $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('The widget could not be saved. Please, try again.', true));
             }
 		}
-		$groups = $this->Widget->Group->find('list', array("order" => "I18n__name.content"));
+		$groups = $this->Widget->Group->find('list', array("order" => "Group.name"));
 		$this->set(compact('groups'));
 	}
 

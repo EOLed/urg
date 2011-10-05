@@ -7,10 +7,8 @@
 		echo $this->Form->input('name');
 		echo $this->Form->input('action');
 		echo $this->Form->input('placement');
-		echo $this->Form->input('Widget.options_en_us', array("type"=>"textarea",
-                                                              "label"=>__("Options (English)", true)));
-		echo $this->Form->input('Widget.options_zh_hk', array("type"=>"textarea",
-                                                              "label"=>__("Options (Chinese)", true)));
+		echo $this->Form->input('Widget.options', array("type"=>"textarea",
+                                                        "label"=>__("Options", true)));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>

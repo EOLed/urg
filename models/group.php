@@ -3,7 +3,7 @@ class Group extends UrgAppModel {
 	var $name = 'Group';
 	var $displayField = 'name';
     var $actsAs = array(
-        "Tree", "Translate" => array("name" => "i18nName", "description" => "i18nDescription")
+        "Tree" 
     );
 	var $validate = array(
 		'name' => array(

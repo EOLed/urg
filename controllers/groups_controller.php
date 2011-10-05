@@ -6,7 +6,7 @@ App::import("Model", "UrgPost.Post");
 App::import("Model", "Urg.Group");
 App::import("Component", "FlyLoader");
 App::import("Lib", "Urg.TranslatableController");
-class GroupsController extends TranslatableController {
+class GroupsController extends UrgAppController {
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
     var $helpers = array("Html", "Form", "Slug", "Grp");
@@ -90,19 +90,7 @@ class GroupsController extends TranslatableController {
 
         $this->Group->locale = array("en_us");
         $mcac = $this->Group->find("first", 
-                array("conditions" => array("I18n__name__en_us.content" => "Montreal Chinese Alliance Church")));
-        $l10n_name = null;
-
-        $locales = $this->Urg->get_locales();
-        $l10n = new L10n();
-        $current_catalog = $l10n->catalog($this->Session->read("Config.language"));
-
-        foreach ($mcac["i18nName"] as $name) {
-            if ($name["locale"] == $current_catalog["locale"]) {
-                $l10n_name = $name["content"];
-                break;
-            }
-        }
+                array("conditions" => array("Group.name" => "Montreal Chinese Alliance Church")));
 
         $this->set('group', $group);
 
