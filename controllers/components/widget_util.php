@@ -34,76 +34,101 @@ class WidgetUtilComponent extends Object {
         $this->controller->loadModel("Group");
 
         //attempt to load widgets associated to group
+        $grouped_widgets = array();
+
         $widgets = $this->controller->Group->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
                                       "Widget.action" => $url),
                 "order" => "Widget.placement"
         ));
 
+        foreach ($widgets as $widget) {
+            if (!isset($grouped_widgets[$widget["Widget"]["placement"]])) {
+                $grouped_widgets[$widget["Widget"]["placement"]] = $widget;
+            }
+        }
+
         CakeLog::write("debug", 
                        "widgets associated to group $group_id: " . Debugger::exportVar($widgets, 3));
 
         //if there are none, get widgets associated to parent
-        while (empty($widgets)) {
-            $parent = $this->controller->Group->getparentnode($group_id);
+        $parent = $this->controller->Group->getparentnode($group_id);
+        
+        while ($parent) {
             CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
 
-            if ($parent !== false) {
-                $group_id = $parent["Group"]["id"];
-                $widgets = $this->controller->Group->Widget->find("all", array(
-                        "conditions" => array("Widget.group_id" => $group_id,
-                                              "Widget.action" => $url),
-                        "order" => "Widget.placement"
-                ));
-            } else {
-                break;
+            $group_id = $parent["Group"]["id"];
+            $widgets = $this->controller->Group->Widget->find("all", array(
+                    "conditions" => array("Widget.group_id" => $group_id,
+                                          "Widget.action" => $url),
+                    "order" => "Widget.placement"
+            ));
+
+            foreach ($widgets as $widget) {
+                if (!isset($grouped_widgets[$widget["Widget"]["placement"]])) {
+                    $grouped_widgets[$widget["Widget"]["placement"]] = $widget;
+                }
             }
+
+            $parent = $this->controller->Group->getparentnode($group_id);
+        }
+
+        foreach ($grouped_widgets as $placement=>$widget) {
+            array_push($widgets, $widget);
         }
 
         $widget_list = array();
         foreach ($widgets as $widget) {
-            CakeLog::write("debug", 
-                           "loading current widget: " . Debugger::exportVar($widget, 3));
-            foreach ($vars as $key => $value) {
-                $widget["Widget"]["options"] = 
-                        str_replace('${' . $key . '}', 
-                                    is_numeric($value) ? $value : "\"$value\"", 
-                                    $widget["Widget"]["options"]);
-            }
-
-            $widget_settings = json_decode($widget["Widget"]["options"], true);
-
-            if ($widget_settings == null) {
-                CakeLog::write("error", "widget " . $widget["Widget"]["id"] . " is invalid.");
-            }
-
-            $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
-            if (property_exists($this->controller, $component) &&
-                    $this->controller->{$component} != null) {
-                CakeLog::write("debug", "using existing component $component");
-                $widget["Widget"]["helper_name"] = $component;
-                $this->controller->{$component}->settings[$widget["Widget"]["id"]] = 
-                        $widget_settings["Component"];
-                array_push($widget_list, $widget);
-            } else {
-                CakeLog::write("debug", "loading component $component");
-                $component = $this->FlyLoader->load("Component", 
-                        array($widget["Widget"]["name"] => 
-                               array($widget["Widget"]["id"] => $widget_settings["Component"])));
-                $widget["Widget"]["helper_name"] = $component;
-                array_push($widget_list, $widget);
-                $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
-                $this->FlyLoader->load("Behavior", $widget["Widget"]["name"]);
-            }
-
-            if ($component !== false) {
-                $this->controller->{$component}->build($widget["Widget"]["id"]);
-            }
+            $this->prepare_widget($widget, $vars);
+            array_push($widget_list, $widget);
         }
 
         CakeLog::write("debug", "widget list: " . Debugger::exportVar($widget_list, 4));
 
         return $widget_list;
+    }
+
+    function get_settings($widget, $vars) {
+        foreach ($vars as $key => $value) {
+            $widget["Widget"]["options"] = 
+                    str_replace('${' . $key . '}', 
+                                is_numeric($value) ? $value : "\"$value\"", 
+                                $widget["Widget"]["options"]);
+        }
+
+        return json_decode($widget["Widget"]["options"], true);
+    }
+
+    function prepare_widget(&$widget, $vars) {
+        CakeLog::write("debug", 
+                       "loading current widget: " . Debugger::exportVar($widget, 3));
+
+        $widget_settings = $this->get_settings($widget, $vars);
+
+        if ($widget_settings == null) {
+            CakeLog::write("error", "widget " . $widget["Widget"]["id"] . " is invalid.");
+        }
+
+        $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
+        if (property_exists($this->controller, $component) &&
+                $this->controller->{$component} != null) {
+            CakeLog::write("debug", "using existing component $component");
+            $widget["Widget"]["helper_name"] = $component;
+            $this->controller->{$component}->settings[$widget["Widget"]["id"]] = 
+                    $widget_settings["Component"];
+        } else {
+            CakeLog::write("debug", "loading component $component");
+            $component = $this->FlyLoader->load("Component", 
+                    array($widget["Widget"]["name"] => 
+                           array($widget["Widget"]["id"] => $widget_settings["Component"])));
+            $widget["Widget"]["helper_name"] = $component;
+            $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
+            $this->FlyLoader->load("Behavior", $widget["Widget"]["name"]);
+        }
+
+        if ($component !== false) {
+            $this->controller->{$component}->build($widget["Widget"]["id"]);
+        }
     }
 
     function load_widgets($widgets, $vars = array()) {
