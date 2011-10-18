@@ -77,7 +77,7 @@ class WidgetUtilComponent extends Object {
             array_push($widgets, $widget);
         }
 
-        sort(&$widgets);
+        ksort(&$widgets);
 
         $widget_list = array();
         foreach ($widgets as $widget) {
