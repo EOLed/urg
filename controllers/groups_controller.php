@@ -5,11 +5,12 @@ App::import("Component", "Urg.WidgetUtil");
 App::import("Model", "UrgPost.Post");
 App::import("Model", "Urg.Group");
 App::import("Component", "FlyLoader");
+App::import("Helper", "Markdown.Markdown");
 App::import("Lib", "Urg.TranslatableController");
 class GroupsController extends UrgAppController {
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
-    var $helpers = array("Html", "Form", "Slug", "Grp");
+    var $helpers = array("Html", "Form", "Slug", "Grp", "Markdown");
     var $components = array("ImgLib", "WidgetUtil", "FlyLoader");
 
 	function index() {

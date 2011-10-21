@@ -28,8 +28,8 @@
     $columns = array();
     if (!isset($widgets["layout"])) {
         $columns["col-0"] = "grid_4 right-border";
-        $columns["col-1"] = "grid_4 right-border";
-        $columns["col-2"] = "grid_4";
+        $columns["col-1"] = "grid_5 right-border";
+        $columns["col-2"] = "grid_3";
     } else {
         $layout_widget = $widgets["layout"];
         $this->{$layout_widget["Widget"]["helper_name"]}->build(${"options_" . 

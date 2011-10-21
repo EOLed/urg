@@ -6,6 +6,7 @@
 			<th><?php echo $this->Paginator->sort('action');?></th>
 			<th><?php echo $this->Paginator->sort('name');?></th>
 			<th><?php echo $this->Paginator->sort('placement');?></th>
+			<th><?php echo $this->Paginator->sort('options');?></th>
 			<th class="actions"></th>
 	</tr>
 	<?php
@@ -23,6 +24,7 @@
 		<td><?php echo $widget['Widget']['action']; ?>&nbsp;</td>
 		<td><?php echo $widget['Widget']['name']; ?>&nbsp;</td>
 		<td><?php echo $widget['Widget']['placement']; ?>&nbsp;</td>
+		<td><?php echo $widget['Widget']['options']; ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View', true), array('action' => 'view', $widget['Widget']['id']), array("class" => "button")); ?>
 			<?php echo $this->Html->link(__('Edit', true), array('action' => 'edit', $widget['Widget']['id']), array("class" => "button")); ?>
