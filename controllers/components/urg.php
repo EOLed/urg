@@ -32,6 +32,9 @@ class UrgComponent extends Object {
         }
 
         $logged_user = $this->Auth->user();
+
+        $logged_user_id = isset($logged_user["User"]["id"]) ? $logged_user["User"]["id"] : "";
+
         CakeLog::write("debug", 
                 "verifying access for " . ($plugin_name != "" ? "/$plugin_name" : "") . 
                 "/$controller_name/$controller_action...");

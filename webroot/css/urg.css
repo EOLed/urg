@@ -69,6 +69,18 @@ div.group-widget {
     position:relative; 
     z-index:2; 
 }
+
+#secured-actions div.input input {
+    clear: none;
+    width: auto;
+}
+
+#secured-actions div.input label {
+    clear: none;
+    width: auto;
+    display: inline;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 

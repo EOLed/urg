@@ -162,6 +162,7 @@ class RolesController extends UrgAppController {
     }
 
     public function get_controllers($plugin="") {
+        $controllers = array();
         $prefix = $plugin == "" ? "" : "$plugin.";
         $controller_path = $plugin != null ? 
                 APP . "plugins" . DS . strtolower(Inflector::underscore($plugin)) . DS . 

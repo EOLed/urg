@@ -18,6 +18,8 @@ class UrgAppController extends AppController {
         if (!$this->Urg->has_access()) {
             $this->log("Redirecting to " . $this->Auth->loginAction, LOG_DEBUG);
             $this->redirect($this->Auth->loginAction);
+        } else {
+            $this->Auth->allow("*");
         }
 
         Configure::load("config");
