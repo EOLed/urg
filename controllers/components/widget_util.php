@@ -34,46 +34,48 @@ class WidgetUtilComponent extends Object {
         $this->controller->loadModel("Group");
 
         //attempt to load widgets associated to group
-        $grouped_widgets = array();
+        $placement_widgets = array();
 
-        $widgets = $this->controller->Group->Widget->find("all", array(
+        $group_widgets = $this->controller->Group->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
                                       "Widget.action" => $url),
                 "order" => "Widget.placement"
         ));
 
-        foreach ($widgets as $widget) {
-            if (!isset($grouped_widgets[$widget["Widget"]["placement"]])) {
-                $grouped_widgets[$widget["Widget"]["placement"]] = $widget;
+        foreach ($group_widgets as $widget) {
+            if (!isset($placement_widgets[$widget["Widget"]["placement"]])) {
+                $placement_widgets[$widget["Widget"]["placement"]] = $widget;
             }
         }
 
         CakeLog::write("debug", 
-                       "widgets associated to group $group_id: " . Debugger::exportVar($widgets, 3));
+                       "widgets associated to group $group_id: " . Debugger::exportVar($group_widgets, 3));
 
         //if there are none, get widgets associated to parent
         $parent = $this->controller->Group->getparentnode($group_id);
+        $parent_widgets = array();
         
         while ($parent) {
             CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
 
             $group_id = $parent["Group"]["id"];
-            $widgets = $this->controller->Group->Widget->find("all", array(
+            $parent_widgets = $this->controller->Group->Widget->find("all", array(
                     "conditions" => array("Widget.group_id" => $group_id,
                                           "Widget.action" => $url),
                     "order" => "Widget.placement"
             ));
 
-            foreach ($widgets as $widget) {
-                if (!isset($grouped_widgets[$widget["Widget"]["placement"]])) {
-                    $grouped_widgets[$widget["Widget"]["placement"]] = $widget;
+            foreach ($parent_widgets as $widget) {
+                if (!isset($placement_widgets[$widget["Widget"]["placement"]])) {
+                    $placement_widgets[$widget["Widget"]["placement"]] = $widget;
                 }
             }
 
             $parent = $this->controller->Group->getparentnode($group_id);
         }
 
-        foreach ($grouped_widgets as $placement=>$widget) {
+        $widgets = array();
+        foreach ($placement_widgets as $placement=>$widget) {
             array_push($widgets, $widget);
         }
 
