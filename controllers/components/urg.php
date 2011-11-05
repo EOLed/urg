@@ -39,20 +39,6 @@ class UrgComponent extends Object {
                 "verifying access for " . ($plugin_name != "" ? "/$plugin_name" : "") . 
                 "/$controller_name/$controller_action...");
 
-        if (isset($logged_user["User"]["username"])) {
-            CakeLog::write("debug", "Logged user: " . $logged_user["User"]["username"] . " id: " . 
-                    $logged_user["User"]["id"]);
-
-            if (!$this->Session->check("Locale")) {
-                $this->controller->loadModel("Profile");
-                $logged_profile = $this->controller->Profile->findByUserId($logged_user["User"]["id"]);
-                $this->Session->write("Locale", $logged_profile["Profile"]["locale"]);
-                $this->Session->write("Config.language", "chi");
-            }
-
-            CakeLog::write("debug", "User locale: " . $this->Session->read("Config.language"));
-        }
-
         $access = false;
         
         if ($this->settings["disabled"]) {

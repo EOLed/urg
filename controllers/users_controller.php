@@ -4,7 +4,7 @@ class UsersController extends UrgAppController {
 	var $modelName;
 
     var $components = array("Urg");
-	
+
     function index() {
         $this->User->recursive = 0;
         $this->set('users', $this->paginate());
@@ -96,13 +96,30 @@ class UsersController extends UrgAppController {
 	
     function beforeFilter() {
         $this->modelName = Inflector::singularize($this->name);
-        $this->Auth->allow("register", "login", "logout");
+        $this->Auth->allow("register", "login", "logout", "locale");
     }
 
 	function login() {
 		if (!empty($this->data)) {
-            $this->log("user logging in: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
+            if ($this->Auth->user() != null) {
+                $logged_user = $this->Auth->user();
+                $this->log("user logging in: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
+                Configure::load("config");
+                $languages = Configure::read("Language");
+                $this->loadModel("Profile");
+
+                $profile = $this->Profile->findByUserId($logged_user["User"]["id"]);
+
+                if ($profile && isset($profile["Profile"]["locale"])) {
+                    $language = $profile["Profile"]["locale"];
+                    Configure::write("Config.language", $language);
+                    $this->Session->write("Config.language", $language);
+                    $this->log("Setting language to: $language", LOG_DEBUG);
+                }
+                $this->redirect($this->Auth->redirect());
+            }
 		}
+
 	}
 	
 	function logout() {
@@ -139,4 +156,9 @@ class UsersController extends UrgAppController {
         $locales = Configure::read("Locale");
         $this->set("locales", $locales);
 	}
+
+    function locale($locale) {
+        $this->Session->write("Config.language", $locale);
+        $this->redirect($this->referer());
+    }
 }

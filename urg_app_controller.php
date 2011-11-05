@@ -8,7 +8,7 @@ class UrgAppController extends AppController {
                            "controller" => "users",
                            "action" => "login",
                            "admin" => false
-                   )
+                   ), "autoRedirect" => false
            ), "Urg"
     );
 
@@ -21,28 +21,6 @@ class UrgAppController extends AppController {
             $this->Auth->allow("*");
         }
 
-        Configure::load("config");
-        $languages = Configure::read("Language");
-        if (!isset($this->params["lang"])) {
-            $logged_user = $this->Auth->user();
-            $this->loadModel("Profile");
-            $profile = $this->Profile->findByUserId($logged_user["User"]["id"]);
-
-            if (!$profile || !isset($profile["Profile"]["locale"])) {
-                $this->params["lang"] = Configure::read("Language.default");
-            } else {
-                $this->params["lang"] = $profile["Profile"]["locale"];
-            }
-
-        }
-
-        $language = $this->params["lang"];
-
-        Configure::write("Config.language", $language);
-        $this->Session->write("Config.language", $language);
-        $this->log("Setting language to: $language", LOG_DEBUG);
-        $this->Session->write("Config.lang", $this->params["lang"]);
-        $this->Session->write("Config.locales", $this->Urg->get_locales());
     }
 
 
