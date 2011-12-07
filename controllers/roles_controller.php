@@ -15,7 +15,7 @@ class RolesController extends UrgAppController {
 		$this->set('role', $this->Role->read(null, $id));
 	}
 
-	function add() {
+	function add($group_slug = null) {
 		if (!empty($this->data)) {
 			$this->Role->create();
             $this->data["SecuredAction"] = $this->convert_to_secured_actions();
@@ -32,7 +32,24 @@ class RolesController extends UrgAppController {
                 $this->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
             }
 		}
-		$groups = $this->Role->Group->find('list');
+
+        $group = null;
+        if ($group_slug != null) {
+            $group = $this->Role->Group->findBySlug($group_slug);
+            $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
+            $this->data["Role"]["group_id"] = $group["Group"]["id"];
+        }
+
+        if ($group == null) {
+            $groups = $this->Role->Group->find("list");
+        } else {
+            $children = $this->Role->Group->children($group["Group"]["id"], false);
+            CakeLog::write(LOG_DEBUG, 'group list' . Debugger::exportVar($children, 3));
+
+            foreach ($children as $child) {
+                $groups[$child["Group"]["id"]] = $child["Group"]["name"];
+            }
+        }
 		$this->set(compact('groups'));
         $this->set("controllers", $this->get_all_controllers());
 	}

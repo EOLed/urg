@@ -10,6 +10,9 @@ class UsersController extends UrgAppController {
         $this->set('users', $this->paginate());
     }
 
+    function dashboard() {
+    }
+
     function view($id = null) {
         if (!$id) {
             $this->Session->setFlash(__('Invalid user', true));
@@ -103,6 +106,7 @@ class UsersController extends UrgAppController {
 		if (!empty($this->data)) {
             if ($this->Auth->user() != null) {
                 $logged_user = $this->Auth->user();
+                $this->Session->write("User", $logged_user);
                 $this->log("user logging in: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
                 Configure::load("config");
                 $languages = Configure::read("Language");
@@ -119,7 +123,6 @@ class UsersController extends UrgAppController {
                 $this->redirect($this->Auth->redirect());
             }
 		}
-
 	}
 	
 	function logout() {
