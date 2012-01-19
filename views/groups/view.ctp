@@ -21,7 +21,7 @@
     </div>
 
     <div id='group-name' class='grid_12 page-title'>
-        <div><?php echo $group["Group"]["name"]?></div>
+        <div><?php echo __($group["Group"]["name"], true) ?></div>
     </div>
 
     <?php
