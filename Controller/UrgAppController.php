@@ -1,5 +1,5 @@
 <?php
-App::import("Component", "Urg.Urg");
+App::uses("Component", "Urg.Urg");
 class UrgAppController extends AppController {
     var $components = array(
            "Auth" => array(
@@ -9,7 +9,7 @@ class UrgAppController extends AppController {
                            "action" => "login",
                            "admin" => false
                    ), "autoRedirect" => false
-           ), "Urg"
+           ), "Urg.Urg"
     );
 
     function beforeFilter() {

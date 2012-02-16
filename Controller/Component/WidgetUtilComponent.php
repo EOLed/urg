@@ -1,6 +1,7 @@
 <?php
-App::import("Model", "Urg.Widget");
-class WidgetUtilComponent extends Object {
+App::uses("Model", "Urg.Widget");
+App::uses("Model", "Urg.Group");
+class WidgetUtilComponent extends Component {
     var $controller;
     var $settings = null; 
     var $components = array("Session","FlyLoader");
@@ -32,11 +33,12 @@ class WidgetUtilComponent extends Object {
         $url = $this->url();
         $this->log("loading widgets for $url", LOG_DEBUG); 
         $this->controller->loadModel("Group");
+        $this->controller->loadModel("Widget");
 
         //attempt to load widgets associated to group
         $placement_widgets = array();
 
-        $group_widgets = $this->controller->Group->Widget->find("all", array(
+        $group_widgets = $this->controller->Widget->find("all", array(
                 "conditions" => array("Widget.group_id" => $group_id,
                                       "Widget.action" => $url),
                 "order" => "Widget.placement"
@@ -52,7 +54,7 @@ class WidgetUtilComponent extends Object {
                        "widgets associated to group $group_id: " . Debugger::exportVar($group_widgets, 3));
 
         //if there are none, get widgets associated to parent
-        $parent = $this->controller->Group->getparentnode($group_id);
+        $parent = $this->controller->Group->getParentNode($group_id);
         $parent_widgets = array();
         
         while ($parent) {
@@ -71,7 +73,7 @@ class WidgetUtilComponent extends Object {
                 }
             }
 
-            $parent = $this->controller->Group->getparentnode($group_id);
+            $parent = $this->controller->Group->getParentNode($group_id);
         }
 
         $widgets = array();

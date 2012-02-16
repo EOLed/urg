@@ -1,7 +1,7 @@
 <?php
-App::import("Component", "ImgLib.ImgLib");
-App::import("Lib", "Urg.AbstractWidgetComponent");
-App::import("Component", "FlyLoader");
+App::uses("Component", "ImgLib.ImgLib");
+App::uses("Lib", "Urg.AbstractWidgetComponent");
+App::uses("Component", "FlyLoader");
 /**
  * The GroupBanner widget can be used to add a banner of the specified group to views.
  *

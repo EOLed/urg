@@ -4,7 +4,7 @@
  */
 
 require_once("i_widget_component.php");
-abstract class AbstractWidgetComponent extends Object implements IWidgetComponent {
+abstract class AbstractWidgetComponent extends Component implements IWidgetComponent {
     var $controller = null;
     var $widget_id = null;
     var $widget_settings = null;

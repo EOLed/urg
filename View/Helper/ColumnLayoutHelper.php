@@ -1,5 +1,5 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetHelper");
+App::uses("Lib", "Urg.AbstractWidgetHelper");
 class ColumnLayoutHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time");
 
