@@ -1,5 +1,5 @@
 <?php
-App::uses("Lib", "Urg.AbstractWidgetComponent");
+App::import("Lib", "Urg.AbstractWidgetComponent");
 
 /**
  * The ColumnLayoutComponent widget facilitates the creation of a

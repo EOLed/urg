@@ -140,7 +140,7 @@ class RolesController extends UrgAppController {
 
         $this->log("Importing controller: $controller_import", LOG_DEBUG);
 
-        App::uses('Controller', $controller_import);
+        App::import('Controller', $controller_import);
         $className = $controller . 'Controller';
         $actions = get_class_methods($className);
         if ($actions == null) $actions = array();
