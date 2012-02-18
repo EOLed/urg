@@ -1,5 +1,5 @@
 <?php
-class UrgComponent extends Object {
+class UrgComponent extends Component {
     var $components = array(
            "Auth" => array(
                    "loginAction" => array(
@@ -41,7 +41,7 @@ class UrgComponent extends Object {
 
         $access = false;
         
-        if ($this->settings["disabled"]) {
+        if (isset($this->settings["disabled"]) && $this->settings["disabled"]) {
             CakeLog::write("debug", "urg is disabled.");
             $access = true;
         } else {

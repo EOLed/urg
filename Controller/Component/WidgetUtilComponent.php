@@ -1,6 +1,6 @@
 <?php
-App::import("Model", "Urg.Widget");
-class WidgetUtilComponent extends Object {
+App::uses("WidgetModel", "Urg.Model");
+class WidgetUtilComponent extends Component {
     var $controller;
     var $settings = null; 
     var $components = array("Session","FlyLoader");

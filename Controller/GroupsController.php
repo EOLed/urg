@@ -1,17 +1,16 @@
 <?php
-App::import("Component", "ImgLib.ImgLib");
-App::import("Helper", "Urg.Grp");
-App::import("Component", "Urg.WidgetUtil");
-App::import("Model", "UrgPost.Post");
-App::import("Model", "Urg.Group");
-App::import("Component", "FlyLoader");
-App::import("Helper", "Markdown.Markdown");
-App::import("Lib", "Urg.TranslatableController");
+App::uses("ImgLibComponent", "ImgLib.Controller/Component");
+App::uses("GrpHelper", "Urg.View/Helper");
+App::uses("WidgetUtilComponent", "Urg.Controller/Component");
+App::uses("PostModel", "UrgPost.Model");
+App::uses("GroupModel", "Urg.Model");
+App::uses("FlyLoaderComponent", "Controller/Component");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
 class GroupsController extends UrgAppController {
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
 	var $name = 'Groups';
-    var $helpers = array("Html", "Form", "Slug", "Grp", "Markdown");
-    var $components = array("ImgLib", "WidgetUtil", "FlyLoader");
+    var $helpers = array("Html", "Form", "Slug", "Urg.Grp", "Markdown.Markdown");
+    var $components = array("ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader");
 
 	function index() {
 		$this->Group->recursive = 0;

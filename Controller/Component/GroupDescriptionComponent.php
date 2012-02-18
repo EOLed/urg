@@ -1,5 +1,5 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetComponent");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
 /**
  * The Group Description Widget can be used to add the description
  * of a specified group within a view.

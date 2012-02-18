@@ -1,6 +1,6 @@
 <?php
-App::import("Helper", "Markdown.Markdown");
-App::import("Lib", "Urg.AbstractWidgetHelper");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
+App::uses("AbstractWidgetHelper", "Urg.Lib");
 class GroupDescriptionHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time", "Markdown"); 
     function build_widget() {
