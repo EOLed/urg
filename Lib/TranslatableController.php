@@ -1,6 +1,6 @@
 <?php
-App::import("Core", "L10n");
-App::import("Sanitize");
+App::uses("L10n", "Core");
+App::uses("Sanitize");
 class TranslatableController extends UrgAppController {
     function beforeFilter() {
         parent::beforeFilter();

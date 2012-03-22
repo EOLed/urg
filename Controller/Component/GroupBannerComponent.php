@@ -31,7 +31,7 @@ class GroupBannerComponent extends AbstractWidgetComponent {
         }
 
         while ($banners === false) {
-            $parent = $this->controller->Group->getparentnode($group_id);
+            $parent = $this->controller->Group->getParentNode($group_id);
 
             if ($parent !== false) {
                 $group_id = $parent["Group"]["id"];

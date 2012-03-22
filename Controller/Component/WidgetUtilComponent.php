@@ -52,7 +52,7 @@ class WidgetUtilComponent extends Component {
                        "widgets associated to group $group_id: " . Debugger::exportVar($group_widgets, 3));
 
         //if there are none, get widgets associated to parent
-        $parent = $this->controller->Group->getparentnode($group_id);
+        $parent = $this->controller->Group->getParentNode($group_id);
         $parent_widgets = array();
         
         while ($parent) {
@@ -71,7 +71,7 @@ class WidgetUtilComponent extends Component {
                 }
             }
 
-            $parent = $this->controller->Group->getparentnode($group_id);
+            $parent = $this->controller->Group->getParentNode($group_id);
         }
 
         $widgets = array();

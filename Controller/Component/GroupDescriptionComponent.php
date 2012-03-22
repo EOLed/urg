@@ -15,7 +15,7 @@ class GroupDescriptionComponent extends AbstractWidgetComponent {
         $original_group = $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
 
         while ($group["Group"]["description"] == "") {
-            $group = $this->controller->Group->getparentnode($group["Group"]["id"]);
+            $group = $this->controller->Group->getParentNode($group["Group"]["id"]);
 
             if ($group === false) {
                 break;
