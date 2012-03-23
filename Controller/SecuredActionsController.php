@@ -1,9 +1,11 @@
 <?php
+App::uses("UrgAppController", "Urg.Controller");
+App::uses("UrgComponent", "Urg.Controller/Component");
 class SecuredActionsController extends UrgAppController {
 
 	var $name = 'SecuredActions';
 
-    var $components = array("Urg" => array("disabled" => true));
+    var $components = array("Urg.Urg" => array("disabled" => true));
 
     function beforeFilter() {
         $this->Auth->allow("getSecuredActionsByUser");

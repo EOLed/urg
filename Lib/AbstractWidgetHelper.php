@@ -4,7 +4,8 @@
  */
 
 require_once("i_widget_helper.php");
-abstract class AbstractWidgetHelper extends Object implements IWidgetHelper {
+App::uses("AppHelper", "View/Helper");
+abstract class AbstractWidgetHelper extends AppHelper implements IWidgetHelper {
     var $options = null;
 
     abstract function build_widget();

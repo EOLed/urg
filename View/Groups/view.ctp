@@ -4,6 +4,7 @@
     <?php
         if (isset($widgets["banner"])) {
             $banner = $widgets["banner"];
+            var_dump($banner);
             echo $this->{$banner["Widget"]["helper_name"]}->build(${"options_" .  
                                                                   $banner["Widget"]["id"]});
         }

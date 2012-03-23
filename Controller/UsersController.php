@@ -1,9 +1,11 @@
 <?php
+App::uses("UrgAppController", "Urg.Controller");
+App::uses("UrgComponent", "Urg.Controller/Component");
 class UsersController extends UrgAppController {
 	var $name = "Users";
 	var $modelName;
 
-    var $components = array("Urg");
+    var $components = array("Urg.Urg");
 
     function index() {
         $this->User->recursive = 0;

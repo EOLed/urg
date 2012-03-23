@@ -116,7 +116,7 @@ class WidgetUtilComponent extends Component {
         $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
         if (property_exists($this->controller, $component) &&
                 $this->controller->{$component} != null) {
-            CakeLog::write("debug", "using existing component $component");
+            CakeLog::write("debug", "loading ocmponent (existing): $component");
             $widget["Widget"]["helper_name"] = $component;
             $this->controller->{$component}->settings[$widget["Widget"]["id"]] = 
                     $widget_settings["Component"];

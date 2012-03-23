@@ -12,14 +12,22 @@ abstract class AbstractWidgetComponent extends Component implements IWidgetCompo
 
     abstract function build_widget();
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
-        $this->settings = $settings;
+    public function initialize($controller) {
+        CakeLog::write("debug", "calling AbstractWidgetComponent->initialize()");
+        $this->controller = $controller;
 
-        CakeLog::write("debug", $this->toString() . " settings: " . Debugger::exportVar($settings, 3));
+        CakeLog::write("debug", "initializing " . $this->toString());  
+    }
+
+    function startup($controller) {
+        CakeLog::write("debug", "calling AbstractWidgetComponent->startup()");
+        $this->controller = $controller;
+
+        CakeLog::write("debug", "starting " . $this->toString());  
     }
 
     function build($widget_id) {
+        CakeLog::write("debug", "calling AbstractWidgetComponent->build()");
         $this->widget_id = $widget_id;
         $this->widget_settings = $this->settings[$widget_id];
 
