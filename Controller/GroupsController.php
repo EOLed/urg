@@ -7,7 +7,7 @@ App::uses("GroupModel", "Urg.Model");
 App::uses("FlyLoaderComponent", "Controller/Component");
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 class GroupsController extends UrgAppController {
-    var $IMAGES = "/app/plugins/urg_post/webroot/img";
+    var $IMAGES = "/app/Plugin/UrgPost/webroot/img";
 	var $name = 'Groups';
     var $helpers = array("Html", "Form", "Slug", "Urg.Grp", "Markdown.Markdown");
     var $components = array("ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader");
