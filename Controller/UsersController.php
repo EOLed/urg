@@ -24,9 +24,9 @@ class UsersController extends UrgAppController {
     }
 
     function add() {
-        if (!empty($this->data)) {
+        if (!empty($this->request->data)) {
             $this->User->create();
-            if ($this->User->save($this->data)) {
+            if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {
@@ -67,20 +67,20 @@ class UsersController extends UrgAppController {
     }
 
     function edit($id = null) {
-        if (!$id && empty($this->data)) {
+        if (!$id && empty($this->request->data)) {
             $this->Session->setFlash(__('Invalid user'));
             $this->redirect(array('action' => 'index'));
         }
-        if (!empty($this->data)) {
-            if ($this->User->save($this->data)) {
+        if (!empty($this->request->data)) {
+            if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
             }
         }
-        if (empty($this->data)) {
-            $this->data = $this->User->read(null, $id);
+        if (empty($this->request->data)) {
+            $this->request->data = $this->User->read(null, $id);
         }
         $roles = $this->getRolesList();
         $this->set(compact('roles'));
@@ -101,15 +101,15 @@ class UsersController extends UrgAppController {
 	
     function beforeFilter() {
         $this->modelName = Inflector::singularize($this->name);
-        $this->Auth->allow("register", "login", "logout", "locale");
+        $this->Auth->allow("*");
     }
 
 	function login() {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
             if ($this->Auth->user() != null) {
                 $logged_user = $this->Auth->user();
                 $this->Session->write("User", $logged_user);
-                $this->log("user logging in: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
+                $this->log("user logging in: " . Debugger::exportVar($this->request->data, 3), LOG_DEBUG);
                 Configure::load("config");
                 $languages = Configure::read("Language");
                 $this->loadModel("Profile");
@@ -124,38 +124,38 @@ class UsersController extends UrgAppController {
                 }
                 $this->redirect($this->Auth->redirect());
             }
-		}
+        }
 	}
 	
 	function logout() {
-		$this->log("logging out user: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+		$this->log("logging out user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
         $this->Session->destroy();
 		$this->redirect($this->Auth->logout());
 	}
 	
 	function register() {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->log("Validating user form...", LOG_DEBUG);
-			if ($this->data[$this->modelName]["password"] == $this->Auth->password($this->data[$this->modelName]["confirm"])) {
+			if ($this->request->data[$this->modelName]["password"] == $this->Auth->password($this->request->data[$this->modelName]["confirm"])) {
 				$this->{$this->modelName}->create();
 				
-				$this->log("Attempting to register user..." . Debugger::exportVar($this->data, 3), 
+				$this->log("Attempting to register user..." . Debugger::exportVar($this->request->data, 3), 
                            LOG_DEBUG);
-				$user = $this->{$this->modelName}->saveAll($this->data);
+				$user = $this->{$this->modelName}->saveAll($this->request->data);
 				
 				if (empty($user)) {
-					$this->log("User creation failed for user: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+					$this->log("User creation failed for user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
 				} else {
-					$this->log("Registered user: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+					$this->log("Registered user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
 				}
 			} else {
-				$this->log("User not registered, did not pass validation: " . $this->data[$this->modelName]["username"], LOG_DEBUG);
+				$this->log("User not registered, did not pass validation: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
 				$this->Session->setFlash(__("The confirmation password does not match."));
 			}
 			
 			$this->log("Clearing user's password.", LOG_DEBUG);
-			$this->data[$this->modelName]["password"] = "";
-			$this->data[$this->modelName]["confirm"] = "";
+			$this->request->data[$this->modelName]["password"] = "";
+			$this->request->data[$this->modelName]["confirm"] = "";
         }
 
         $locales = Configure::read("Locale");

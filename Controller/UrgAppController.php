@@ -12,6 +12,8 @@ class UrgAppController extends AppController {
            ), "Urg.Urg"
     );
 
+    var $helpers = array("Js", "Html", "Form");
+
     function beforeFilter() {
         parent::beforeFilter();
         if (!$this->Urg->has_access()) {
