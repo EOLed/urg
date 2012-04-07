@@ -1,14 +1,11 @@
 <?php
 class UrgComponent extends Component {
     var $components = array(
-           "Auth" => array(
-                   "loginAction" => array(
-                           "plugin" => "urg",
-                           "controller" => "users",
-                           "action" => "login",
-                           "admin" => false
-                   )
-           ), "Session"
+           "Auth" => array("loginAction" => array("plugin" => "urg",
+                                                  "controller" => "users",
+                                                  "action" => "login"),
+                           "authenticate" => array("Form")),
+           "Session"
     );
 
     var $controller;
@@ -46,7 +43,7 @@ class UrgComponent extends Component {
             $access = true;
         } else {
             $request_action = "/urg/secured_actions/getSecuredActionsByUser/" . 
-                    $logged_user["User"]["id"];
+                    $logged_user["User"]["username"];
 
             CakeLog::write("debug", "Requesting action: $request_action"); 
 

@@ -5,7 +5,11 @@ class UsersController extends UrgAppController {
 	var $name = "Users";
 	var $modelName;
 
-    var $components = array("Urg.Urg");
+    var $components = array("Urg.Urg",
+                            "Auth" => array("loginAction" => array("plugin" => "urg",
+                                                                   "controller" => "users",
+                                                                   "action" => "login"),
+                                            "authenticate" => array("Form")));
 
     function index() {
         $this->User->recursive = 0;
@@ -37,6 +41,13 @@ class UsersController extends UrgAppController {
         $roles = $this->getRolesList();
         
         $this->set(compact('roles'));
+    }
+
+    function populateAdmin() {
+        $data["User"]["id"] = 1;
+        $data["User"]["username"] = "admin";
+        $data["User"]["password"] = $this->Auth->password("admin");
+        $this->User->saveAll($data);
     }
     
     function getRolesList() {
@@ -101,28 +112,34 @@ class UsersController extends UrgAppController {
 	
     function beforeFilter() {
         $this->modelName = Inflector::singularize($this->name);
-        $this->Auth->allow("*");
+        /*$this->Auth->allow("*");*/
     }
 
 	function login() {
-		if (!empty($this->request->data)) {
+        CakeLog::write(LOG_DEBUG, "auth data: " . Debugger::exportVar($this->request->data, 3));
+
+		if (!empty($this->request->data) && $this->Auth->login($this->request->data)) {
             if ($this->Auth->user() != null) {
                 $logged_user = $this->Auth->user();
-                $this->Session->write("User", $logged_user);
-                $this->log("user logging in: " . Debugger::exportVar($this->request->data, 3), LOG_DEBUG);
-                Configure::load("config");
-                $languages = Configure::read("Language");
-                $this->loadModel("Profile");
+                $logged_user = $this->User->findByUsername($logged_user["User"]["username"]);
 
-                $profile = $this->Profile->findByUserId($logged_user["User"]["id"]);
+                if ($logged_user !== false) {
+                    $this->Session->write("User", $logged_user);
+                    $this->log("user logging in: " . Debugger::exportVar($logged_user, 3), LOG_DEBUG);
+                    Configure::load("config");
+                    $languages = Configure::read("Language");
+                    $this->loadModel("Profile");
 
-                if ($profile && isset($profile["Profile"]["locale"])) {
-                    $language = $profile["Profile"]["locale"];
-                    Configure::write("Config.language", $language);
-                    $this->Session->write("Config.language", $language);
-                    $this->log("Setting language to: $language", LOG_DEBUG);
+                    $profile = $this->Profile->findByUserId($logged_user["User"]["id"]);
+
+                    if ($profile && isset($profile["Profile"]["locale"])) {
+                        $language = $profile["Profile"]["locale"];
+                        Configure::write("Config.language", $language);
+                        $this->Session->write("Config.language", $language);
+                        $this->log("Setting language to: $language", LOG_DEBUG);
+                    }
+                    $this->redirect($this->Auth->redirect());
                 }
-                $this->redirect($this->Auth->redirect());
             }
         }
 	}
@@ -134,7 +151,7 @@ class UsersController extends UrgAppController {
 	}
 	
 	function register() {
-		if (!empty($this->request->data)) {
+		/*if (!empty($this->request->data)) {
 			$this->log("Validating user form...", LOG_DEBUG);
 			if ($this->request->data[$this->modelName]["password"] == $this->Auth->password($this->request->data[$this->modelName]["confirm"])) {
 				$this->{$this->modelName}->create();
@@ -159,7 +176,7 @@ class UsersController extends UrgAppController {
         }
 
         $locales = Configure::read("Locale");
-        $this->set("locales", $locales);
+        $this->set("locales", $locales);*/
 	}
 
     function locale($locale) {

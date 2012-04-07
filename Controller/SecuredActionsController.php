@@ -8,7 +8,6 @@ class SecuredActionsController extends UrgAppController {
     var $components = array("Urg.Urg" => array("disabled" => true));
 
     function beforeFilter() {
-        $this->Auth->allow("getSecuredActionsByUser");
     }
 
 	function index() {
@@ -119,11 +118,11 @@ class SecuredActionsController extends UrgAppController {
         return $actions;
     }
 
-    function getSecuredActionsByUser($user_id=null) {
+    function getSecuredActionsByUser($username=null) {
         $role_ids = array();
 
-        if ($user_id != null) {
-            $this->log("retrieving secured actions for $user_id", LOG_DEBUG);
+        if ($username != null) {
+            $this->log("retrieving secured actions for $username", LOG_DEBUG);
             $this->loadModel("User");
             $this->User->bindModel(array(
                     "hasAndBelongsToMany" => array(
@@ -145,10 +144,11 @@ class SecuredActionsController extends UrgAppController {
                     )
             )); 
             
-            $user = $this->User->findById($user_id);
+            $user = $this->User->findByUsername($username);
 
             $this->User->unbindModel(array("hasAndBelongsToMany" => array("Role")));
 
+            CakeLog::write(LOG_DEBUG, "roles from user: " . Debugger::exportVar($user["Role"]));
             foreach ($user["Role"] as $role) {
                 array_push($role_ids, $role["id"]);
             }
