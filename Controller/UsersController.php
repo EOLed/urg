@@ -137,7 +137,7 @@ class UsersController extends UrgAppController {
                     }
                 }
 
-                $this->redirect($this->Auth->redirect());
+                $this->redirect("/");
             }
         }
 	}
