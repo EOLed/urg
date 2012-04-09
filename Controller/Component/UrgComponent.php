@@ -30,7 +30,7 @@ class UrgComponent extends Component {
 
         $logged_user = $this->Auth->user();
 
-        $logged_user_id = isset($logged_user["User"]["id"]) ? $logged_user["User"]["id"] : "";
+        $logged_user_id = isset($logged_user["id"]) ? $logged_user["id"] : "";
 
         CakeLog::write("debug", 
                 "verifying access for " . ($plugin_name != "" ? "/$plugin_name" : "") . 
@@ -43,11 +43,13 @@ class UrgComponent extends Component {
             $access = true;
         } else {
             $request_action = "/urg/secured_actions/getSecuredActionsByUser/" . 
-                    $logged_user["User"]["username"];
+                    $logged_user["username"];
 
             CakeLog::write("debug", "Requesting action: $request_action"); 
 
             $secured_actions = $this->controller->requestAction($request_action);
+           
+            CakeLog::write("debug", "done Requesting action: $request_action"); 
 
             $secured_controller = ($plugin_name != "" ? Inflector::camelize($plugin_name) . "."  : "") . 
                     Inflector::camelize($controller_name);

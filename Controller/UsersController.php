@@ -5,11 +5,7 @@ class UsersController extends UrgAppController {
 	var $name = "Users";
 	var $modelName;
 
-    var $components = array("Urg.Urg",
-                            "Auth" => array("loginAction" => array("plugin" => "urg",
-                                                                   "controller" => "users",
-                                                                   "action" => "login"),
-                                            "authenticate" => array("Form")));
+    var $components = array("Urg.Urg");
 
     function index() {
         $this->User->recursive = 0;
@@ -118,10 +114,11 @@ class UsersController extends UrgAppController {
 	function login() {
         CakeLog::write(LOG_DEBUG, "auth data: " . Debugger::exportVar($this->request->data, 3));
 
-		if (!empty($this->request->data) && $this->Auth->login($this->request->data)) {
-            if ($this->Auth->user() != null) {
+		if (!empty($this->request->data)) {
+            if ($this->Auth->login() && $this->Auth->user() != null) {
                 $logged_user = $this->Auth->user();
-                $logged_user = $this->User->findByUsername($logged_user["User"]["username"]);
+                CakeLog::write(LOG_DEBUG, "auth user: " . Debugger::exportVar($logged_user, 3));
+                $logged_user = $this->User->findByUsername($logged_user["username"]);
 
                 if ($logged_user !== false) {
                     $this->Session->write("User", $logged_user);
@@ -138,14 +135,15 @@ class UsersController extends UrgAppController {
                         $this->Session->write("Config.language", $language);
                         $this->log("Setting language to: $language", LOG_DEBUG);
                     }
-                    $this->redirect($this->Auth->redirect());
                 }
+
+                $this->redirect($this->Auth->redirect());
             }
         }
 	}
 	
 	function logout() {
-		$this->log("logging out user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
+		$this->log("logging out user: " . Debugger::exportVar($this->Session->read("User"), 3), LOG_DEBUG);
         $this->Session->destroy();
 		$this->redirect($this->Auth->logout());
 	}

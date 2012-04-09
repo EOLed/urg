@@ -8,6 +8,7 @@ class SecuredActionsController extends UrgAppController {
     var $components = array("Urg.Urg" => array("disabled" => true));
 
     function beforeFilter() {
+        $this->Auth->allow("getSecuredActionsByUser");
     }
 
 	function index() {
