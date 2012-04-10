@@ -21,7 +21,7 @@ class GroupBannerComponent extends AbstractWidgetComponent {
 
     function get_banners($group_id) {
         $banners = false;
-        $this->controller->loadModel("Urg.AttachmentMetadatum");
+        $this->controller->loadModel("UrgPost.AttachmentMetadatum");
         $meta = $this->controller->AttachmentMetadatum->find("first", array("conditions" => array(
                 "AttachmentMetadatum.key" => "group_id",
                 "AttachmentMetadatum.value" => $group_id), "order" => "created DESC"));
@@ -45,7 +45,7 @@ class GroupBannerComponent extends AbstractWidgetComponent {
         return $banners;
     }
     function bindModels() {
-        $this->controller->loadModel("Urg.Attachment");
+        $this->controller->loadModel("UrgPost.Attachment");
         $this->controller->loadModel("UrgPost.Post");
     }
 

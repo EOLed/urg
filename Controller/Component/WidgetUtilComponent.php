@@ -1,5 +1,6 @@
 <?php
 App::uses("WidgetModel", "Urg.Model");
+App::uses("GroupModel", "Urg.Model");
 class WidgetUtilComponent extends Component {
     var $controller;
     var $settings = null; 
@@ -31,7 +32,7 @@ class WidgetUtilComponent extends Component {
     function load($group_id, $vars = array()) {
         $url = $this->url();
         $this->log("loading widgets for $url", LOG_DEBUG); 
-        $this->controller->loadModel("Group");
+        $this->controller->loadModel("Urg.Group");
 
         //attempt to load widgets associated to group
         $placement_widgets = array();
@@ -52,6 +53,7 @@ class WidgetUtilComponent extends Component {
                        "widgets associated to group $group_id: " . Debugger::exportVar($group_widgets, 3));
 
         //if there are none, get widgets associated to parent
+        CakeLog::write(LOG_DEBUG, "group model: " . Debugger::exportVar($this->controller->Group, 3));
         $parent = $this->controller->Group->getParentNode($group_id);
         $parent_widgets = array();
         

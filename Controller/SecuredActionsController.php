@@ -124,7 +124,7 @@ class SecuredActionsController extends UrgAppController {
 
         if ($username != null) {
             $this->log("retrieving secured actions for $username", LOG_DEBUG);
-            $this->loadModel("User");
+            $this->loadModel("Urg.User");
             $this->User->bindModel(array(
                     "hasAndBelongsToMany" => array(
                             'Role' => array(
