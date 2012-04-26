@@ -1,4 +1,4 @@
-<div class="grid_6 widgets form">
+<div class="span6 widgets form">
 <?php echo $this->Form->create('Widget');?>
 	<fieldset>
  		<legend><?php echo __('Add Widget'); ?></legend>
@@ -13,7 +13,7 @@
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
 </div>
-<div class="grid_6 actions">
+<div class="span6 actions">
 	<h2><?php echo __('Actions'); ?></h2>
 	<ul>
 

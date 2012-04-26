@@ -16,9 +16,9 @@ class WidgetsController extends UrgAppController {
 	}
 
 	function add($group_id = null) {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->Widget->create();
-			if ($this->Widget->save($this->data)) {
+			if ($this->Widget->save($this->request->data)) {
 				$this->Session->setFlash(__('The widget has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -27,7 +27,7 @@ class WidgetsController extends UrgAppController {
 		}
 
         if ($group_id != null) {
-            $this->data["Widget"]["group_id"] = $group_id;
+            $this->request->data["Widget"]["group_id"] = $group_id;
         }
 
 		$groups = $this->Widget->Group->find('list');
@@ -35,13 +35,13 @@ class WidgetsController extends UrgAppController {
 	}
 
 	function edit($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid widget'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
-            $this->data["Widget"]["options"] = $this->data["Widget"]["options"];
-            $success = $this->Widget->save($this->data);
+		if (!empty($this->request->data)) {
+            $this->request->data["Widget"]["options"] = $this->data["Widget"]["options"];
+            $success = $this->Widget->save($this->request->data);
             if (!$success) {
                 $this->Session->setFlash(__('The widget could not be saved. Please, try again.'));
                 break;
@@ -52,8 +52,8 @@ class WidgetsController extends UrgAppController {
                 $this->redirect(array('action' => 'index'));
             }
 		}
-		if (empty($this->data)) {
-			$this->data = $this->Widget->find("first", 
+		if (empty($this->request->data)) {
+			$this->request->data = $this->Widget->find("first", 
                                               array("conditions" => array("Widget.id" => $id)));
 		}
 		$groups = $this->Widget->Group->find('list');
@@ -61,20 +61,20 @@ class WidgetsController extends UrgAppController {
 	}
 
 	function duplicate($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid widget'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (empty($this->data)) {
-			$this->data = $this->Widget->find("first", 
+		if (empty($this->request->data)) {
+			$this->request->data = $this->Widget->find("first", 
                                               array("conditions" => array("Widget.id" => $id)));
-            $this->data["Widget"]["group_id"] = null;
+            $this->request->data["Widget"]["group_id"] = null;
 		} else {
             $this->Widget->create();
 
-            $success = $this->Widget->save($this->data);
+            $success = $this->Widget->save($this->request->data);
 
-            if ($this->Widget->save($this->data)) {
+            if ($this->Widget->save($this->request->data)) {
                 $this->Session->setFlash(__('The widget has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {

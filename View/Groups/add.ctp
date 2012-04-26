@@ -1,7 +1,7 @@
 <?php
     echo $this->Slug->include_script(array("inline"=>"true"));
 ?>
-<div class="groups form grid_6 suffix_6">
+<div class="groups form span6 suffix_6">
 <?php echo $this->Form->create('Group');?>
 	<fieldset>
  		<legend><?php echo __('Add Group'); ?></legend>
@@ -18,7 +18,7 @@
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
 </div>
-<div class="actions grid_6 suffix_6">
+<div class="actions span6 suffix_6">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('List Groups'), array('controller' => 'groups', 'action' => 'index')); ?> </li>

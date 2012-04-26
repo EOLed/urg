@@ -1,4 +1,4 @@
-<div class="grid_6 roles form">
+<div class="span6 roles form">
 <?php echo $this->Form->create('Role');?>
 	<fieldset>
  		<legend><?php echo __('Add Role'); ?></legend>
@@ -16,7 +16,7 @@
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
 </div>
-<div class="grid_6 actions">
+<div class="span6 actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
