@@ -5,7 +5,8 @@ class UrgAppController extends AppController {
                             "Auth" => array("loginAction" => array("plugin" => "urg",
                                                                    "controller" => "users",
                                                                    "action" => "login"),
-                                            "authenticate" => array("Form")));
+                                            "authenticate" => array("Form"),
+                                            "logoutRedirect" => "/"));
 
     var $helpers = array("Js", "Html", "Form");
 
