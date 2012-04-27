@@ -1,4 +1,5 @@
 <?php
+App::uses("UrgAppModel", "Urg.Model");
 class Group extends UrgAppModel {
 	var $name = 'Group';
 	var $displayField = 'name';
