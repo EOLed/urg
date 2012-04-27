@@ -32,9 +32,9 @@
     <?php
     $columns = array();
     if (!isset($widgets["layout"])) {
-        $columns["col-0"] = "span4 right-border";
-        $columns["col-1"] = "span5 right-border";
-        $columns["col-2"] = "span3";
+        $columns["col-0"] = "span4";
+        $columns["col-1"] = "span4 center-col";
+        $columns["col-2"] = "span4";
     } else {
         $layout_widget = $widgets["layout"];
         $this->{$layout_widget["Widget"]["helper_name"]}->build(${"options_" . 

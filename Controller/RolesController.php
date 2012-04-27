@@ -1,4 +1,5 @@
 <?php
+App::uses("UrgAppController", "Urg.Controller");
 class RolesController extends UrgAppController {
 	var $name = 'Roles';
 
@@ -16,20 +17,20 @@ class RolesController extends UrgAppController {
 	}
 
 	function add($group_slug = null) {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->Role->create();
-            $this->data["SecuredAction"] = $this->convert_to_secured_actions();
+            $this->request->data["SecuredAction"] = $this->convert_to_secured_actions();
             $now = date("Y-m-d H:i:s");
-			if ($this->Role->saveAll($this->data)) {
+			if ($this->Role->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The role has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The role could not be saved. Please, try again.'));
 			}
 		}
-		if (empty($this->data)) {
-            if (isset($this->data["Role"]["secured_actions"])) {
-                $this->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
+		if (empty($this->request->data)) {
+            if (isset($this->request->data["Role"]["secured_actions"])) {
+                $this->request->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
             }
 		}
 
@@ -37,7 +38,7 @@ class RolesController extends UrgAppController {
         if ($group_slug != null) {
             $group = $this->Role->Group->findBySlug($group_slug);
             $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
-            $this->data["Role"]["group_id"] = $group["Group"]["id"];
+            $this->request->data["Role"]["group_id"] = $group["Group"]["id"];
         }
 
         if ($group == null) {
@@ -55,22 +56,22 @@ class RolesController extends UrgAppController {
 	}
 
 	function edit($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid role'));
 			$this->redirect(array('action' => 'index'));
 		}
 
         $secured_actions = $this->requestAction("/urg/secured_actions/find_by_role_id/$id");
 
-		if (!empty($this->data)) {
-            $this->data["SecuredAction"] = $this->convert_to_secured_actions();
+		if (!empty($this->request->data)) {
+            $this->request->data["SecuredAction"] = $this->convert_to_secured_actions();
             $now = date("Y-m-d H:i:s");
             $ds = $this->Role->getDataSource();
             $ds->begin($this);
-			if ($this->Role->saveAll($this->data)) {
+			if ($this->Role->saveAll($this->request->data)) {
                 $this->Role->SecuredAction->deleteAll(array(
                         "SecuredAction.created <"=>$now,
-                        "SecuredAction.role_id"=>$this->data["Role"]["id"]));
+                        "SecuredAction.role_id"=>$this->request->data["Role"]["id"]));
                 $ds->commit($this);
 				$this->Session->setFlash(__('The role has been saved'));
 				$this->redirect(array('action' => 'index'));
@@ -80,9 +81,9 @@ class RolesController extends UrgAppController {
 			}
 		}
 
-		if (empty($this->data)) {
-			$this->data = $this->Role->read(null, $id);
-            $this->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
+		if (empty($this->request->data)) {
+			$this->request->data = $this->Role->read(null, $id);
+            $this->request->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
 		}
 		$groups = $this->Role->Group->find('list');
 		$this->set(compact('groups'));
@@ -92,11 +93,11 @@ class RolesController extends UrgAppController {
     function convert_to_secured_actions() {
         $actions = array();
 
-        if (isset($this->data["Role"]["secured_actions"]) && 
-                is_array($this->data["Role"]["secured_actions"])) {
-            foreach ($this->data["Role"]["secured_actions"] as $action) {
+        if (isset($this->request->data["Role"]["secured_actions"]) && 
+                is_array($this->request->data["Role"]["secured_actions"])) {
+            foreach ($this->request->data["Role"]["secured_actions"] as $action) {
                 $action = preg_split("/\//", $action);
-                array_push($actions, array(#"role_id"=>$this->data["Role"]["id"], 
+                array_push($actions, array(#"role_id"=>$this->request->data["Role"]["id"], 
                         "controller"=>$action[0], "action"=>$action[1]));
             }
         }

@@ -81,6 +81,10 @@ div.group-widget {
     display: inline;
 }
 
+#col-1.center-col {
+    background-color: #eee;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 

@@ -1,4 +1,7 @@
 <?php
+App::uses("SecuredActionModel", "Urg.Model");
+App::uses("UserModel", "Urg.Model");
+App::uses("UrgAppModel", "Urg.Model");
 class Role extends UrgAppModel {
 	var $name = 'Role';
 	var $validate = array(
@@ -20,13 +23,13 @@ class Role extends UrgAppModel {
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 	var $belongsTo = array(
-		'Group' => array(
+		'Urg.Group' => array(
 			'className' => 'Group',
 			'foreignKey' => 'group_id'
 		)
 	);
 
-	var $hasAndBelongsToMany = array("User");
+	var $hasAndBelongsToMany = array("Urg.User");
 	//	'User' => array(
 	//		'className' => 'User',
 	//		'joinTable' => 'roles_users',
@@ -36,7 +39,7 @@ class Role extends UrgAppModel {
 	//	)
 	//);
 
-    var $hasMany = array("SecuredAction");
+    var $hasMany = array("Urg.SecuredAction");
 
 //    function beforeDelete() {
 //        $count = $this->SecuredAction->find("count", array(
