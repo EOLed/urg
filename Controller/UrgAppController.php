@@ -11,13 +11,13 @@ class UrgAppController extends AppController {
     var $helpers = array("Js", "Html", "Form");
 
     function beforeFilter() {
-        parent::beforeFilter();
         if (!$this->Urg->has_access()) {
             $this->log("Redirecting to " . $this->Auth->loginAction, LOG_DEBUG);
             $this->redirect($this->Auth->loginAction);
         } else {
             $this->Auth->allow("*");
         }
+        parent::beforeFilter();
     }
 
 

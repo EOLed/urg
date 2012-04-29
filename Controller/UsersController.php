@@ -106,11 +106,6 @@ class UsersController extends UrgAppController {
         $this->redirect(array('action' => 'index'));
     }
 	
-    function beforeFilter() {
-        $this->modelName = Inflector::singularize($this->name);
-        /*$this->Auth->allow("*");*/
-    }
-
 	function login() {
         CakeLog::write(LOG_DEBUG, "auth data: " . Debugger::exportVar($this->request->data, 3));
 
