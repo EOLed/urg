@@ -85,6 +85,10 @@ div.group-widget {
     background-color: #eee;
 }
 
+.action-dropdown {
+    padding-bottom: 20px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 
