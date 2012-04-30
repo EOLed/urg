@@ -89,6 +89,10 @@ div.group-widget {
     padding-bottom: 20px;
 }
 
+.dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+    background-color: #333;
+}
+
 /** NOTICES & MESSAGES */
 div.validated { 
     clear: both; 
