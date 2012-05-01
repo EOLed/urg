@@ -85,10 +85,6 @@ div.group-widget {
     background-color: #eee;
 }
 
-.action-dropdown {
-    padding-bottom: 20px;
-}
-
 .dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
     background-color: #333;
 }
