@@ -84,7 +84,7 @@ class GroupsController extends UrgAppController {
 
         $widgets = $this->WidgetUtil->load($group["Group"]["id"], 
                                            array('group_id' => $group["Group"]["id"]));
-        $widget_list = $this->prepare_widgets($widgets);
+        $widget_list = $this->__prepare_widgets($widgets);
 
         $this->Group->locale = array("en_us");
         $mcac = $this->Group->find("first", 
@@ -97,7 +97,7 @@ class GroupsController extends UrgAppController {
         $this->set("widgets", $widget_list);
     }
 
-    function prepare_widgets($widgets) {
+    function __prepare_widgets($widgets) {
         $widget_list = array();
         foreach ($widgets as $widget) {
             if (strpos($widget["Widget"]["placement"], "|") === false) {
@@ -111,11 +111,6 @@ class GroupsController extends UrgAppController {
         $this->log("prepared widgets: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
 
         return $widget_list;
-    }
-
-    function translate($slug = null, $original_locale = null) {
-        parent::translate($slug, $original_locale);
-        $this->data["Group"]["parent_id"] = $this->data["Translation"]["Group"]["parent_id"];
     }
 }
 ?>

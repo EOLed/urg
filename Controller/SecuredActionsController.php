@@ -49,7 +49,7 @@ class SecuredActionsController extends UrgAppController {
                         __('The secured action could not be saved. Please, try again.'));
 			}
 		}
-		$roles = $this->getRolesList();
+		$roles = $this->__get_roles_list();
 		$this->set(compact('roles'));
 	}
 
@@ -70,7 +70,7 @@ class SecuredActionsController extends UrgAppController {
 		if (empty($this->data)) {
 			$this->data = $this->SecuredAction->read(null, $id);
 		}
-		$roles = $this->getRolesList();
+		$roles = $this->__get_roles_list();
 		$this->set(compact('roles'));
 	}
 
@@ -87,7 +87,7 @@ class SecuredActionsController extends UrgAppController {
 		$this->redirect(array('action' => 'index'));
 	}
 	
-    function getRolesList() {
+    function __get_roles_list() {
         $this->SecuredAction->Role->bindModel(array(
                 "belongsTo" => array(
                         "Group" => array(

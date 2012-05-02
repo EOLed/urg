@@ -27,7 +27,7 @@ class UrgAppController extends AppController {
         parent::log("[" . $this->toString() . "::" . $trace[1]["function"] . "()] $msg", $type);
     }
 
-    function logVar($msg, $var, $type = LOG_ERROR) {
+    function __logVar($msg, $var, $type = LOG_ERROR) {
         $this->log($msg . "\n" . Debugger::exportVar($var, 3), $type);
     }
 

@@ -34,19 +34,19 @@ class UsersController extends UrgAppController {
             }
         }
         
-        $roles = $this->getRolesList();
+        $roles = $this->__get_roles_list();
         
         $this->set(compact('roles'));
     }
 
-    function populateAdmin() {
+    function __populate_admin() {
         $data["User"]["id"] = 1;
         $data["User"]["username"] = "admin";
         $data["User"]["password"] = $this->Auth->password("admin");
         $this->User->saveAll($data);
     }
     
-    function getRolesList() {
+    function __get_roles_list() {
         $this->User->Role->bindModel(array(
                 "belongsTo" => array(
                         "Group" => array(
@@ -89,7 +89,7 @@ class UsersController extends UrgAppController {
         if (empty($this->request->data)) {
             $this->request->data = $this->User->read(null, $id);
         }
-        $roles = $this->getRolesList();
+        $roles = $this->__get_roles_list();
         $this->set(compact('roles'));
     }
 
