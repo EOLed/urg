@@ -20,11 +20,11 @@ class UrgComponent extends Component {
         $plugin_name = $controller_name = $controller_action = null;
         if (is_array($action)) {
             $plugin_name = isset($action["plugin"]) ? $action["plugin"] : null;
-            $controller_name = $action["controller"];
+            $controller_name = $action["controller"] . "Controller";
             $controller_action = $action["action"];
         } else {
             $plugin_name = $this->controller->params["plugin"];
-            $controller_name = $this->controller->params["controller"];
+            $controller_name = $this->controller->params["controller"] . "Controller";
             $controller_action = $this->controller->params["action"];
         }
 
