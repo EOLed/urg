@@ -3,6 +3,11 @@ App::uses("UrgAppController", "Urg.Controller");
 class RolesController extends UrgAppController {
 	var $name = 'Roles';
 
+    function beforeFilter() {
+        parent::beforeFilter();
+        $this->loadModel("Urg.Group");
+        $this->Role->bindModel(array("belongsTo" => array("Group" => array("className" => "Urg.Group"))));
+    }
 	function index() {
 		$this->Role->recursive = 0;
 		$this->set('roles', $this->paginate());
@@ -36,15 +41,15 @@ class RolesController extends UrgAppController {
 
         $group = null;
         if ($group_slug != null) {
-            $group = $this->Role->Group->findBySlug($group_slug);
+            $group = $this->Group->findBySlug($group_slug);
             $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
             $this->request->data["Role"]["group_id"] = $group["Group"]["id"];
         }
 
         if ($group == null) {
-            $groups = $this->Role->Group->find("list");
+            $groups = $this->Group->find("list");
         } else {
-            $children = $this->Role->Group->children($group["Group"]["id"], false);
+            $children = $this->Group->children($group["Group"]["id"], false);
             CakeLog::write(LOG_DEBUG, 'group list' . Debugger::exportVar($children, 3));
 
             foreach ($children as $child) {
@@ -85,7 +90,7 @@ class RolesController extends UrgAppController {
 			$this->request->data = $this->Role->read(null, $id);
             $this->request->data["Role"]["secured_actions"] = $this->convert_to_form($secured_actions);
 		}
-		$groups = $this->Role->Group->find('list');
+		$groups = $this->Group->find('list');
 		$this->set(compact('groups'));
         $this->set("controllers", $this->get_all_controllers());
 	}
@@ -137,13 +142,11 @@ class RolesController extends UrgAppController {
 	}
 
     public function get_controller_info($controller, $plugin="") {
-        $controller_import = ($plugin != "" ? "$plugin." : "") . $controller;
+        $controller_import = ($plugin != "" ? "$plugin." : "") . "Controller";
 
-        $this->log("Importing controller: $controller_import", LOG_DEBUG);
-
-        App::uses('Controller', $controller_import);
-        $className = $controller . 'Controller';
-        $actions = get_class_methods($className);
+        $this->log("Importing controller: App::uses($controller, $controller_import)", LOG_DEBUG);
+        App::uses($controller, $controller_import);
+        $actions = get_class_methods($controller);
         if ($actions == null) $actions = array();
 
         foreach($actions as $k => $v) {
@@ -174,7 +177,7 @@ class RolesController extends UrgAppController {
         }
 
         $this->log("retrieving all controllers: " . 
-                Debugger::exportVar($controllers, true), LOG_DEBUG);
+                Debugger::exportVar($controllers, 5), LOG_DEBUG);
 
         return $controllers;
     }
@@ -183,15 +186,14 @@ class RolesController extends UrgAppController {
         $controllers = array();
         $prefix = $plugin == "" ? "" : "$plugin.";
         $controller_path = $plugin != null ? 
-                APP . "plugins" . DS . strtolower(Inflector::underscore($plugin)) . DS . 
-                "controllers" : "";
-        $controllerClasses = App::objects('controller',  $controller_path, false); 
+                APP . "Plugin" . DS . $plugin . DS . "Controller" : "";
+        $controllerClasses = App::objects('Controller',  $controller_path, false); 
         $this->log("searching for controllers in path: $controller_path\n" . 
-                Debugger::exportVar($controllerClasses), LOG_DEBUG);
+                Debugger::exportVar($controllerClasses, 5), LOG_DEBUG);
 
         foreach($controllerClasses as $controller) { 
-            $this->log("getting details of controller: $controller", LOG_DEBUG); 
-            if ($controller != $plugin.'App') { 
+            if ($controller != $plugin.'AppController') { 
+                $this->log("getting details of controller: $controller", LOG_DEBUG); 
                 $controllers[$prefix . $controller] = $this->get_controller_info($controller, $plugin);
             }
         }

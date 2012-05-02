@@ -7,6 +7,20 @@ class SecuredActionsController extends UrgAppController {
 
     var $components = array("Urg.Urg" => array("disabled" => true));
 
+    function migrate($version) {
+        if ($version == "v1") {
+            $data = $this->SecuredAction->find("all");
+            foreach ($data as $secured_action) {
+                if ($secured_action["SecuredAction"]["controller"] == "*")
+                    continue;
+
+                $secured_action["SecuredAction"]["controller"] = $secured_action["SecuredAction"]["controller"] . "Controller";
+                $this->SecuredAction->save($secured_action);
+            }
+        }
+        $this->redirect("index");
+    }
+
     function beforeFilter() {
         $this->Auth->allow("getSecuredActionsByUser");
     }
