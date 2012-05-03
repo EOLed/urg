@@ -74,5 +74,10 @@ class User extends UrgAppModel {
 		$valid = $size >= $min && $size <= $max;
 		
 		return $valid;
-	}
+	} 
+
+    public function beforeSave($options = array()) { 
+        $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
+        return true; 
+    } 
 }
