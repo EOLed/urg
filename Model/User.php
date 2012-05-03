@@ -41,7 +41,7 @@ class User extends UrgAppModel {
 
     var $hasAndBelongsToMany = array(
         'Role' => array(
-            'className' => 'Role',
+            'className' => 'Urg.Role',
             'joinTable' => 'roles_users',
             'foreignKey' => 'user_id',
             'associationForeignKey' => 'role_id',

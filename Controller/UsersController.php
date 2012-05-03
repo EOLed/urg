@@ -144,6 +144,16 @@ class UsersController extends UrgAppController {
 	}
 	
 	function register() {
+        if (!empty($this->request->data)) {
+            $this->User->create();
+            $this->request->data["Role"]["Role"] = Configure::read("User.defaultRoles");
+            if ($this->User->save($this->request->data)) {
+                $this->login();
+            } else {
+                $this->Session->setFlash(__('The user could not be registered. Please, try again.'));
+            }
+        }
+        
 		/*if (!empty($this->request->data)) {
 			$this->log("Validating user form...", LOG_DEBUG);
 			if ($this->request->data[$this->modelName]["password"] == $this->Auth->password($this->request->data[$this->modelName]["confirm"])) {
