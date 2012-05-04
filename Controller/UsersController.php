@@ -144,6 +144,13 @@ class UsersController extends UrgAppController {
 	}
 	
 	function register() {
+        Configure::load("config");
+        if (Configure::read("User.registrationEnabled") === false) {
+            $this->Session->setFlash(__("User registration has been disabled."));
+            $this->redirect($this->referer());
+            return;
+        }
+
         if (!empty($this->request->data)) {
             $this->User->create();
             $this->request->data["Role"]["Role"] = Configure::read("User.defaultRoles");
