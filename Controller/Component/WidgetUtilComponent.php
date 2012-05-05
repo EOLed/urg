@@ -121,12 +121,12 @@ class WidgetUtilComponent extends Component {
             CakeLog::write("debug", "loading ocmponent (existing): $component");
             $widget["Widget"]["helper_name"] = $component;
             $this->controller->{$component}->settings[$widget["Widget"]["id"]] = 
-                    $widget_settings["Component"];
+                    $widget_settings;
         } else {
             CakeLog::write("debug", "loading component $component");
             $component = $this->FlyLoader->load("Component", 
                     array($widget["Widget"]["name"] => 
-                           array($widget["Widget"]["id"] => $widget_settings["Component"])));
+                           array($widget["Widget"]["id"] => $widget_settings)));
             $widget["Widget"]["helper_name"] = $component;
             $this->FlyLoader->load("Helper", $widget["Widget"]["name"]);
             $this->FlyLoader->load("Behavior", $widget["Widget"]["name"]);
