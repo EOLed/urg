@@ -110,10 +110,10 @@ class UsersController extends UrgAppController {
         CakeLog::write(LOG_DEBUG, "auth data: " . Debugger::exportVar($this->request->data, 3));
 
 		if (!empty($this->request->data)) {
-            if ($this->Auth->login() && $this->Auth->user() != null) {
+            if ($this->Auth->login($this->request->data) && $this->Auth->user() != null) {
                 $logged_user = $this->Auth->user();
                 CakeLog::write(LOG_DEBUG, "auth user: " . Debugger::exportVar($logged_user, 3));
-                $logged_user = $this->User->findByUsername($logged_user["username"]);
+                $logged_user = $this->User->findByUsername($logged_user["User"]["username"]);
 
                 if ($logged_user !== false) {
                     $this->Session->write("User", $logged_user);

@@ -7,6 +7,10 @@ class GroupTitleComponent extends Component {
     }
 
     public function get_title($group) {
+        if (!isset($this->__controller->Group)) {
+            $this->__controller->loadModel("Urg.Group");
+        }
+
         $path = $this->__controller->Group->getPath($group["Group"]["id"]);
 
         $home_group = $this->__get_closest_home_group($group, $path);
