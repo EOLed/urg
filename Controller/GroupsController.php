@@ -20,39 +20,39 @@ class GroupsController extends UrgAppController {
 	}
 
 	function add($parent_id = null) {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->Group->create();
-			if ($this->Group->save($this->data)) {
+			if ($this->Group->save($this->request->data)) {
 				$this->Session->setFlash(__('The group has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
 			}
 		} else if ($parent_id != null) {
-            $this->data["Group"]["parent_id"] = $parent_id;
+            $this->request->data["Group"]["parent_id"] = $parent_id;
             $parent_group = $this->Group->findById($parent_id);
-            $this->data["ParentGroup"] = $parent_group["Group"];
+            $this->request->data["ParentGroup"] = $parent_group["Group"];
         }
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups', 'groups'));
 	}
 
 	function edit($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid group'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
-			if ($this->Group->save($this->data)) {
+		if (!empty($this->request->data)) {
+			if ($this->Group->save($this->request->data)) {
 				$this->Session->setFlash(__('The group has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
 			}
 		}
-		if (empty($this->data)) {
-			$this->data = $this->Group->read(null, $id);
-            $this->log("editing group: " . Debugger::exportVar($this->data, 4), LOG_DEBUG);
+		if (empty($this->request->data)) {
+			$this->request->data = $this->Group->read(null, $id);
+            $this->log("editing group: " . Debugger::exportVar($this->request->data, 4), LOG_DEBUG);
 		}
 
 		$parents = $this->Group->ParentGroup->find('list');

@@ -133,7 +133,6 @@ class WidgetsController extends UrgAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->request->data)) {
-            $this->request->data["Widget"]["options"] = $this->data["Widget"]["options"];
             $success = $this->Widget->save($this->request->data);
             if (!$success) {
                 $this->Session->setFlash(__('The widget could not be saved. Please, try again.'));

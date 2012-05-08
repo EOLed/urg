@@ -39,9 +39,9 @@ class SecuredActionsController extends UrgAppController {
 	}
 
 	function add() {
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->SecuredAction->create();
-			if ($this->SecuredAction->save($this->data)) {
+			if ($this->SecuredAction->save($this->request->data)) {
 				$this->Session->setFlash(__('The secured action has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -54,12 +54,12 @@ class SecuredActionsController extends UrgAppController {
 	}
 
 	function edit($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid secured action'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
-			if ($this->SecuredAction->save($this->data)) {
+		if (!empty($this->request->data)) {
+			if ($this->SecuredAction->save($this->request->data)) {
 				$this->Session->setFlash(__('The secured action has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -67,8 +67,8 @@ class SecuredActionsController extends UrgAppController {
                         __('The secured action could not be saved. Please, try again.'));
 			}
 		}
-		if (empty($this->data)) {
-			$this->data = $this->SecuredAction->read(null, $id);
+		if (empty($this->request->data)) {
+			$this->request->data = $this->SecuredAction->read(null, $id);
 		}
 		$roles = $this->__get_roles_list();
 		$this->set(compact('roles'));
