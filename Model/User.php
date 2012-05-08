@@ -1,4 +1,5 @@
 <?php
+App::uses("AuthComponent", "Controller/Component");
 App::uses("UrgAppModel", "Urg.Model");
 class User extends UrgAppModel {
 	var $name = "User";

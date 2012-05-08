@@ -28,7 +28,7 @@ class UrgComponent extends Component {
             $controller_action = $this->controller->params["action"];
         }
 
-        $logged_user = $this->Auth->user();
+        $logged_user = $this->Session->read("User");
 
         $logged_user_id = isset($logged_user["User"]["id"]) ? $logged_user["User"]["id"] : "";
 

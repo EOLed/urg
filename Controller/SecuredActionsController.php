@@ -161,12 +161,14 @@ class SecuredActionsController extends UrgAppController {
             
             $user = $this->User->findByUsername($username);
 
-            $this->User->unbindModel(array("hasAndBelongsToMany" => array("Role")));
+            if ($user !== false) {
 
-            CakeLog::write(LOG_DEBUG, "roles from user: " . Debugger::exportVar($user["Role"]));
-            foreach ($user["Role"] as $role) {
-                array_push($role_ids, $role["id"]);
+                CakeLog::write(LOG_DEBUG, "roles from user: " . Debugger::exportVar($user["Role"]));
+                foreach ($user["Role"] as $role) {
+                    array_push($role_ids, $role["id"]);
+                }
             }
+            $this->User->unbindModel(array("hasAndBelongsToMany" => array("Role")));
         }
         
         $this->log("finding secured actions for roles: " . implode(",", $role_ids), LOG_DEBUG);
