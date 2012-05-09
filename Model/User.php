@@ -78,7 +78,7 @@ class User extends UrgAppModel {
 	} 
 
     public function beforeSave($options = array()) { 
-        $this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']); 
+        $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
         return true; 
     } 
 }
