@@ -142,52 +142,6 @@ class UsersController extends UrgAppController {
         $this->Session->destroy();
 		$this->redirect($this->Auth->logout());
 	}
-	
-	function register() {
-        Configure::load("config");
-        if (Configure::read("User.registrationEnabled") === false) {
-            $this->Session->setFlash(__("User registration has been disabled."));
-            $this->redirect($this->referer());
-            return;
-        }
-
-        if (!empty($this->request->data)) {
-            $this->User->create();
-            $this->request->data["Role"]["Role"] = Configure::read("User.defaultRoles");
-            if ($this->User->save($this->request->data)) {
-                $this->login();
-            } else {
-                $this->Session->setFlash(__('The user could not be registered. Please, try again.'));
-            }
-        }
-        
-		/*if (!empty($this->request->data)) {
-			$this->log("Validating user form...", LOG_DEBUG);
-			if ($this->request->data[$this->modelName]["password"] == $this->Auth->password($this->request->data[$this->modelName]["confirm"])) {
-				$this->{$this->modelName}->create();
-				
-				$this->log("Attempting to register user..." . Debugger::exportVar($this->request->data, 3), 
-                           LOG_DEBUG);
-				$user = $this->{$this->modelName}->saveAll($this->request->data);
-				
-				if (empty($user)) {
-					$this->log("User creation failed for user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
-				} else {
-					$this->log("Registered user: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
-				}
-			} else {
-				$this->log("User not registered, did not pass validation: " . $this->request->data[$this->modelName]["username"], LOG_DEBUG);
-				$this->Session->setFlash(__("The confirmation password does not match."));
-			}
-			
-			$this->log("Clearing user's password.", LOG_DEBUG);
-			$this->request->data[$this->modelName]["password"] = "";
-			$this->request->data[$this->modelName]["confirm"] = "";
-        }
-
-        $locales = Configure::read("Locale");
-        $this->set("locales", $locales);*/
-	}
 
     function locale($locale) {
         $this->Session->write("Config.language", $locale);
