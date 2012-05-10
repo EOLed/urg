@@ -132,7 +132,8 @@ class UsersController extends UrgAppController {
                     }
                 }
 
-                $this->redirect("/");
+                CakeLog::write(LOG_DEBUG, "auth redirect: " . Debugger::exportVar($this->Auth->redirect(), 5));
+                $this->redirect($this->referer());
             }
         }
 	}
