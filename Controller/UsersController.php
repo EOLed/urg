@@ -6,6 +6,7 @@ class UsersController extends UrgAppController {
 	var $modelName;
 
     var $components = array("Urg.Urg");
+    var $helpers = array("TwitterBootstrap.TwitterBootstrap", "Form", "Session", "Html");
 
     function index() {
         $this->User->recursive = 0;
@@ -71,6 +72,30 @@ class UsersController extends UrgAppController {
         $this->User->Role->unbindModel(array("belongsTo" => array("Group")));
         
         return $roles;
+    }
+
+    function assign_roles($username = null) {
+        $habtms = array("Role" => array("className" => "Urg.Role"));
+        $this->User->bindModel(array("hasAndBelongsToMany" => $habtms));
+		if ($this->request->is('post') || $this->request->is('put')) {
+            $user = $this->User->findById($this->request->data["User"]["id"]);
+            $user["User"]["password"] = null;
+            //var_dump($this->request->data);
+            if ($this->User->saveAll($this->request->data)) {
+                $this->Session->setFlash(__("Roles successfully assigned"));
+                $this->redirect(array("action" => "index"));
+            } else {
+                $this->Session->setFlash(__("Couldn't assign roles"));
+            }
+        }
+        if ($username != null)  {
+            $user = $this->User->findByUsername($username);
+            $this->request->data = $user;
+        }
+
+        $roles = $this->__get_roles_list();
+        $this->set("user", $user);
+        $this->set("roles", $this->User->Role->find("list"));
     }
 
     function edit($id = null) {

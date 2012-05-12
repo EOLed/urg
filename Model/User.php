@@ -9,7 +9,8 @@ class User extends UrgAppModel {
         "password" => array(
                 "notEmpty" => array(
 	                "rule" => "notEmpty",
-		            "message" => "errors.users.password.required"
+		            "message" => "errors.users.password.required",
+                    "on" => "create"
 		        )
 		),
 		"confirm" => array(
@@ -78,7 +79,14 @@ class User extends UrgAppModel {
 	} 
 
     public function beforeSave($options = array()) { 
-        $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
+        // hash password if defined... otherwise, use old password.
+        if (isset($this->data["User"]["password"]) && $this->data["User"]["password"] != null) {
+            $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
+        } else {
+            $user = $this->findById($this->data["User"]["id"]);
+            $this->data["User"]["password"] = $user["User"]["password"];
+        }
+
         return true; 
     } 
 }
