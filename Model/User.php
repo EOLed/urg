@@ -1,6 +1,7 @@
 <?php
 App::uses("AuthComponent", "Controller/Component");
 App::uses("UrgAppModel", "Urg.Model");
+App::uses("CakeEmail", "Network/Email");
 class User extends UrgAppModel {
 	var $name = "User";
     var $displayField = "username";	
@@ -78,7 +79,24 @@ class User extends UrgAppModel {
 		return $valid;
 	} 
 
+    private function __email($body) {
+        $email_config = Configure::read("Email.config");
+
+        $email = $email_config == "default" ? new CakeEmail() : new CakeEmail($email_config);
+
+        $email->from("no-reply@churchie.org")
+              ->to("amos.chan@chapps.org")
+              ->subject("[Churchie] Saving User model")
+              ->emailFormat("both")
+              ->send($body);
+    }
+
     public function beforeSave($options = array()) { 
+        $debug_info = "attempting to save user: " . Debugger::exportVar($this->data, 5) . " with trace " .
+                      Debugger::trace();
+        CakeLog::write(LOG_DEBUG, $debug_info);
+        $this->__email($debug_info);
+
         // hash password if defined... otherwise, use old password.
         if (isset($this->data["User"]["password"]) && $this->data["User"]["password"] != null) {
             $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
