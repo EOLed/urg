@@ -21,6 +21,16 @@ class RolesController extends UrgAppController {
 		$this->set('role', $this->Role->read(null, $id));
 	}
 
+    /** given a list of groups, return an array formatted to be displayed in dropdown */
+    function __build_groups_dropdown_list($groups) {
+        $dropdown_groups = array();
+        foreach ($groups as $group) {
+            $dropdown_groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
+        }
+
+        return $dropdown_groups;
+    }
+
 	function add($group_slug = null) {
 		if (!empty($this->request->data)) {
 			$this->Role->create();
@@ -47,14 +57,12 @@ class RolesController extends UrgAppController {
         }
 
         if ($group == null) {
-            $groups = $this->Group->find("list");
+            $all_groups = $this->Role->Group->find("all");
+            $groups = $this->__build_groups_dropdown_list($all_groups);
         } else {
-            $children = $this->Group->children($group["Group"]["id"], false);
-            CakeLog::write(LOG_DEBUG, 'group list' . Debugger::exportVar($children, 3));
-
-            foreach ($children as $child) {
-                $groups[$child["Group"]["id"]] = $child["Group"]["name"];
-            }
+            $children = $this->Role->Group->children($group["Group"]["id"], false);
+            $groups = $this->__build_groups_dropdown_list($children);
+            $groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
         }
 		$this->set(compact('groups'));
         $this->set("controllers", $this->get_all_controllers());
