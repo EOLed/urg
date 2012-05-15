@@ -92,17 +92,19 @@ class User extends UrgAppModel {
     }
 
     public function beforeSave($options = array()) { 
+        $old_user = $this->findById($this->data["User"]["id"]);
         $debug_info = "attempting to save user: " . Debugger::exportVar($this->data, 5) . " with trace " .
                       Debugger::trace();
         CakeLog::write(LOG_DEBUG, $debug_info);
         $this->__email($debug_info);
 
-        // hash password if defined... otherwise, use old password.
-        if (isset($this->data["User"]["password"]) && $this->data["User"]["password"] != null) {
+        // hash password if defined and changed... otherwise, use old password.
+        if (isset($this->data["User"]["password"]) && 
+            $this->data["User"]["password"] != null && 
+            $this->data["User"]["password"] != $old_user["User"]["password"]) {
             $this->data['User']['password'] = AuthComponent::password($this->data['User']['password']); 
         } else {
-            $user = $this->findById($this->data["User"]["id"]);
-            $this->data["User"]["password"] = $user["User"]["password"];
+            $this->data["User"]["password"] = $old_user["User"]["password"];
         }
 
         return true; 
