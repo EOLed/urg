@@ -108,6 +108,16 @@ class WidgetsController extends UrgAppController {
 		$this->set('widget', $this->Widget->read(null, $id));
 	}
 
+    /** given a list of groups, return an array formatted to be displayed in dropdown */
+    function __build_groups_dropdown_list($groups) {
+        $dropdown_groups = array();
+        foreach ($groups as $group) {
+            $dropdown_groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
+        }
+
+        return $dropdown_groups;
+    }
+
 	function add($group_id = null) {
 		if (!empty($this->request->data)) {
 			$this->Widget->create();
@@ -123,7 +133,7 @@ class WidgetsController extends UrgAppController {
             $this->request->data["Widget"]["group_id"] = $group_id;
         }
 
-		$groups = $this->Widget->Group->find('list');
+		$groups = $this->__build_groups_dropdown_list($this->Widget->Group->find('all'));
 		$this->set(compact('groups'));
 	}
 
@@ -148,7 +158,7 @@ class WidgetsController extends UrgAppController {
 			$this->request->data = $this->Widget->find("first", 
                                               array("conditions" => array("Widget.id" => $id)));
 		}
-		$groups = $this->Widget->Group->find('list');
+		$groups = $this->__build_groups_dropdown_list($this->Widget->Group->find('all'));
 		$this->set(compact('groups'));
 	}
 
@@ -173,7 +183,7 @@ class WidgetsController extends UrgAppController {
                 $this->Session->setFlash(__('The widget could not be saved. Please, try again.'));
             }
 		}
-		$groups = $this->Widget->Group->find('list', array("order" => "Group.name"));
+		$groups = $this->__build_groups_dropdown_list($this->Widget->Group->find('all'));
 		$this->set(compact('groups'));
 	}
 

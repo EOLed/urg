@@ -29,6 +29,20 @@ class WidgetUtilComponent extends Component {
         return $url;
     }
 
+    function __placement_available($widget_to_add, $widgets) {
+        if (isset($widgets[$widget_to_add["Widget"]["placement"]]))
+            return false;
+
+        foreach ($widgets as $widget) {
+            if ($this->__get_primary_placement($widget["Widget"]["placement"]) == 
+                $this->__get_primary_placement($widget_to_add["Widget"]["placement"])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     function load($group_id, $vars = array()) {
         $url = $this->url();
         $this->log("loading widgets for $url", LOG_DEBUG); 
@@ -56,6 +70,8 @@ class WidgetUtilComponent extends Component {
         CakeLog::write(LOG_DEBUG, "group model: " . Debugger::exportVar($this->controller->Group, 3));
         $parent = $this->controller->Group->getParentNode($group_id);
         $parent_widgets = array();
+
+        ksort($placement_widgets);
         
         while ($parent) {
             CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
@@ -68,7 +84,7 @@ class WidgetUtilComponent extends Component {
             ));
 
             foreach ($parent_widgets as $widget) {
-                if (!isset($placement_widgets[$widget["Widget"]["placement"]])) {
+                if ($this->__placement_available($widget, $placement_widgets)) {
                     $placement_widgets[$widget["Widget"]["placement"]] = $widget;
                 }
             }
@@ -92,6 +108,14 @@ class WidgetUtilComponent extends Component {
         CakeLog::write("debug", "widget list: " . Debugger::exportVar($widget_list, 4));
 
         return $widget_list;
+    }
+
+    function __get_primary_placement($placement) {
+        if (strpos($placement, "|") !== false) {
+            $placement = explode("|", $placement);
+            $placement = $placement[0];
+        }
+        return $placement;
     }
 
     function get_settings($widget, $vars) {
