@@ -73,6 +73,7 @@ class WidgetUtilComponent extends Component {
 
         ksort($placement_widgets);
         
+        $new_placement_widgets = array();
         while ($parent) {
             CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
 
@@ -83,10 +84,16 @@ class WidgetUtilComponent extends Component {
                     "order" => "Widget.placement"
             ));
 
+            $new_sections = array();
             foreach ($parent_widgets as $widget) {
-                if ($this->__placement_available($widget, $placement_widgets)) {
-                    $placement_widgets[$widget["Widget"]["placement"]] = $widget;
+                if ($this->__placement_available($widget, $placement_widgets) ||
+                    in_array($this->__get_primary_placement($widget["Widget"]["placement"]), $new_sections)) {
+                    $new_placement_widgets[$widget["Widget"]["placement"]] = $widget;
                 }
+            }
+
+            foreach ($new_placement_widgets as $new_widget) {
+                $placement_widgets[$new_widget["Widget"]["placement"]] = $new_widget;
             }
 
             $parent = $this->controller->Group->getParentNode($group_id);
