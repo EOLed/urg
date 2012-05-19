@@ -67,6 +67,10 @@ class UrgComponent extends Component {
                             $access = true;
                         } else {
                             CakeLog::write(LOG_DEBUG, "role group id: " . $action["Role"]["group_id"]);
+
+                            if (!isset($this->controller->Group))
+                                $this->controller->loadModel("Urg.Group");
+
                             $children = $this->controller->Group->children($action["Role"]["group_id"]);
                             foreach ($children as $child) {
                                 if ($child["Group"]["id"] == $group_id) {
