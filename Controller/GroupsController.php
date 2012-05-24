@@ -10,7 +10,7 @@ class GroupsController extends UrgAppController {
     var $IMAGES = "/app/Plugin/UrgPost/webroot/img";
 	var $name = 'Groups';
     var $helpers = array("Html", "Form", "Slug", "Urg.Grp", "Markdown.Markdown");
-    var $components = array("Urg.GroupTitle", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader");
+    var $components = array("Urg.GroupUtil", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader");
 
 	function index() {
 		$this->Group->recursive = 0;
@@ -90,7 +90,8 @@ class GroupsController extends UrgAppController {
 
         $this->set('group', $group);
 
-        $this->set("title_for_layout", $this->GroupTitle->get_title($group));
+        $this->set("home_group", $this->GroupUtil->get_closest_home_group($group));
+        $this->set("title_for_layout", $this->GroupUtil->get_title($group));
 
         $this->set("widgets", $widget_list);
     }
