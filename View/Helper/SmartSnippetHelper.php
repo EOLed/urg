@@ -26,5 +26,3 @@ class SmartSnippetHelper extends AppHelper {
         return $snippet . "...";
     }
 }
-?>
-
