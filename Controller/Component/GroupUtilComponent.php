@@ -39,7 +39,7 @@ class GroupUtilComponent extends Component {
         }
 
         if ($group["Group"]["home"]) {
-            Cache::write("grouputil-homegroup-" . $group["Group"]["id"], $current_group);
+            Cache::write("grouputil-homegroup-" . $group["Group"]["id"], $group);
             return $group;
         }
 
