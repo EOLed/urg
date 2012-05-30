@@ -42,14 +42,10 @@ class UrgComponent extends Component {
             CakeLog::write("debug", "urg is disabled.");
             $access = true;
         } else {
-            $request_action = "/urg/secured_actions/getSecuredActionsByUser/" . 
+            $this->controller->loadModel("Urg.SecuredAction");
                     $logged_user["User"]["username"];
 
-            CakeLog::write("debug", "Requesting action: $request_action"); 
-
-            $secured_actions = $this->controller->requestAction($request_action);
-           
-            CakeLog::write("debug", "done Requesting action: $request_action"); 
+            $secured_actions = $this->get_secured_actions($logged_user["User"]["username"]);
 
             $secured_controller = ($plugin_name != "" ? Inflector::camelize($plugin_name) . "."  : "") . 
                     Inflector::camelize($controller_name);
@@ -110,5 +106,52 @@ class UrgComponent extends Component {
         }
 
         return $locales;
+    }
+
+    function get_secured_actions($username=null) {
+        $role_ids = array();
+
+        if ($username != null) {
+            CakeLog::write(LOG_DEBUG, "retrieving secured actions for $username");
+            $this->controller->loadModel("Urg.User");
+            $this->controller->User->bindModel(array(
+                    "hasAndBelongsToMany" => array(
+                            'Role' => array(
+                                'className' => 'Role',
+                                'joinTable' => 'roles_users',
+                                'foreignKey' => 'user_id',
+                                'associationForeignKey' => 'role_id',
+                                'unique' => true,
+                                'conditions' => '',
+                                'fields' => '',
+                                'order' => '',
+                                'limit' => '',
+                                'offset' => '',
+                                'finderQuery' => '',
+                                'deleteQuery' => '',
+                                'insertQuery' => ''
+                            )
+                    )
+            )); 
+            
+            $user = $this->controller->User->findByUsername($username);
+
+            if ($user !== false) {
+
+                CakeLog::write(LOG_DEBUG, "roles from user: " . Debugger::exportVar($user["Role"]));
+                foreach ($user["Role"] as $role) {
+                    array_push($role_ids, $role["id"]);
+                }
+            }
+            $this->controller->User->unbindModel(array("hasAndBelongsToMany" => array("Role")));
+        }
+        
+        CakeLog::write(LOG_DEBUG, "finding secured actions for roles: " . implode(",", $role_ids));
+        $role_actions = $this->controller->SecuredAction->find("all", array("conditions"=>array("role_id"=>$role_ids)));
+        $public_actions = $this->controller->SecuredAction->find("all", array("conditions"=>array("role_id"=>null)));
+
+        $actions = array_merge($role_actions, $public_actions);
+
+        return $actions;
     }
 }
