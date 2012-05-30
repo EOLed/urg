@@ -31,8 +31,17 @@ class GroupUtilComponent extends Component {
     }
 
     public function get_closest_home_group($group, $path = null) {
-        if ($group["Group"]["home"])
+        $cached_home_group = Cache::read("grouputil-homegroup-" . $group["Group"]["id"]);
+
+        if ($cached_home_group !== false) {
+            CakeLog::write(LOG_DEBUG, "using cached home group");
+            return $cached_home_group;
+        }
+
+        if ($group["Group"]["home"]) {
+            Cache::write("grouputil-homegroup-" . $group["Group"]["id"], $current_group);
             return $group;
+        }
 
         if (!isset($this->__controller->Group))
             $this->__controller->loadModel("Urg.Group");
@@ -42,8 +51,10 @@ class GroupUtilComponent extends Component {
 
         for ($i = (sizeof($path) - 1); $i >=0; $i--) {
             $current_group = $path[$i];
-            if ($current_group["Group"]["home"])
+            if ($current_group["Group"]["home"]) {
+                Cache::write("grouputil-homegroup-" . $group["Group"]["id"], $current_group);
                 return $current_group;
+            }
         }
 
         return null;
