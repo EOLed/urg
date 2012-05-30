@@ -96,7 +96,7 @@ class User extends UrgAppModel {
         $debug_info = "attempting to save user: " . Debugger::exportVar($this->data, 5) . " with trace " .
                       Debugger::trace();
         CakeLog::write(LOG_DEBUG, $debug_info);
-        $this->__email($debug_info);
+//        $this->__email($debug_info);
 
         // hash password if defined and changed... otherwise, use old password.
         if (isset($this->data["User"]["password"]) && 
