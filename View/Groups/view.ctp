@@ -23,8 +23,8 @@
     </div>
 
     <div class="row">
-        <div id='group-name' class='span12 page-title'>
-            <div><?php echo __($group["Group"]["name"]) ?></div>
+        <div class='span12'>
+            <div id="group-name" class="page-title"><?php echo __($group["Group"]["name"]) ?></div>
         </div>
     </div>
 
