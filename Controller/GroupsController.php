@@ -80,6 +80,16 @@ class GroupsController extends UrgAppController {
         }
 
         $group = $this->Group->findBySlug($slug);
+
+        $home_group = $this->GroupUtil->get_closest_home_group($group);
+
+        if ($home_group["Group"]["id"] != $group["Group"]["id"]) {
+            $this->redirect(array("plugin" => "urg", 
+                                  "controller" => "groups", 
+                                  "action" => "view", 
+                                  $home_group["Group"]["slug"]));
+        }
+
         $this->log("Viewing group: " . Debugger::exportVar($group, 3), LOG_DEBUG);
 
         $widgets = $this->WidgetUtil->load($group["Group"]["id"], 
@@ -90,7 +100,6 @@ class GroupsController extends UrgAppController {
 
         $this->set('group', $group);
 
-        $this->set("home_group", $this->GroupUtil->get_closest_home_group($group));
         $this->set("title_for_layout", $this->GroupUtil->get_title($group));
 
         $this->set("widgets", $widget_list);
