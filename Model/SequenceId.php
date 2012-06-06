@@ -17,5 +17,3 @@ class SequenceId extends UrgAppModel {
         return $next;
     }
 }
-?>
-
