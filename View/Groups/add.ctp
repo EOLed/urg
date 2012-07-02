@@ -14,6 +14,7 @@
         }
         echo $this->Slug->slug("name", "slug", $slug_options); 
 		echo $this->Form->input('description', array("type" => "textarea"));
+		echo $this->Form->input('home', array("type"=> "checkbox"));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

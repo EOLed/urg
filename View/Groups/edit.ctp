@@ -12,6 +12,7 @@
                 array("base_url" => "http://montreal-cac.org/urg_group/groups/", 
                       "auto_update" => false));
 		echo $this->Form->input('description', array("type" => "textrea"));
+		echo $this->Form->input('home', array("type" => "checkbox"));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
