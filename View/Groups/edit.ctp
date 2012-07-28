@@ -9,7 +9,7 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('parent_id', array("label"=>__("Parent Group"), "empty"=>__("No Parent")));
         echo $this->Slug->slug("name", "slug", 
-                array("base_url" => "http://montreal-cac.org/urg_group/groups/", 
+                array("base_url" => "http://mtlcac.org/urg_group/groups/", 
                       "auto_update" => false));
 		echo $this->Form->input('description', array("type" => "textrea"));
 		echo $this->Form->input('home', array("type" => "checkbox"));

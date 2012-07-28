@@ -8,7 +8,7 @@
 	<?php
 		echo $this->Form->hidden('parent_id');
         $slug_options = array("auto_update" => true,
-                              "base_url" => "http://montreal-cac.org/urg_group/groups/");
+                              "base_url" => "http://mtlcac.org/urg_group/groups/");
         if (isset($this->request->data["ParentGroup"])) {
             $slug_options["slug_prefix"] = $this->request->data["ParentGroup"]["slug"] . "-";
         }
