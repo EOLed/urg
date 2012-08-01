@@ -16,8 +16,8 @@ class ColumnLayoutComponent extends AbstractWidgetComponent {
         $options = array();
         $columns = array();
 
-        for ($i = 0; $i < $this->widget_settings["columns"]; $i++) {
-            $columns["col-$i"] = $this->widget_settings["col-$i"];
+        foreach ($this->widget_settings["columns"] as $column_id => $column) {
+            $columns[$column_id] = $column;
         }
 
         $this->set("columns", $columns);
