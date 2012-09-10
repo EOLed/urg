@@ -12,14 +12,14 @@ abstract class AbstractWidgetComponent extends Component implements IWidgetCompo
 
     abstract function build_widget();
 
-    public function initialize($controller) {
+    public function initialize(Controller $controller) {
         CakeLog::write("debug", "calling AbstractWidgetComponent->initialize()");
         $this->controller = $controller;
 
         CakeLog::write("debug", "initializing " . $this->toString());  
     }
 
-    function startup($controller) {
+    function startup(Controller $controller) {
         CakeLog::write("debug", "calling AbstractWidgetComponent->startup()");
         $this->controller = $controller;
 
