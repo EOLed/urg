@@ -6,8 +6,8 @@ class WidgetUtilComponent extends Component {
     var $settings = null; 
     var $components = array("Session","FlyLoader");
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
+    function initialize(Controller $controller, $settings = array()) {
+        $this->controller = $controller;
         $this->settings = $settings;
     }
 
@@ -104,7 +104,7 @@ class WidgetUtilComponent extends Component {
             array_push($widgets, $widget);
         }
 
-        ksort(&$widgets);
+        ksort($widgets);
 
         $widget_list = array();
         foreach ($widgets as $widget) {

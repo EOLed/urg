@@ -11,8 +11,8 @@ class UrgComponent extends Component {
     var $controller;
     var $settings = array("disabled" => false); 
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
+    function initialize(Controller $controller, $settings = array()) {
+        $this->controller = $controller;
         $this->settings = array_merge($this->settings, $settings);
     }
 
