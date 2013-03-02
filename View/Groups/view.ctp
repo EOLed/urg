@@ -1,7 +1,8 @@
 <?php $this->Html->css("/urg/css/urg.css", null, array("inline" => false)); ?>
 <div class="groups view">
+    <?php $bannerClass = isset($widgets["side"]) ? "span9" : "span12"; ?>
     <div class="row">
-        <div id="banner" class="span9 right-border">
+        <div id="banner" class="<?php echo $bannerClass ?>">
         <?php
             if (isset($widgets["banner"])) {
                 $banner = $widgets["banner"];
@@ -11,15 +12,15 @@
         ?>
         </div>
 
+        <?php if (isset($widgets["side"])) { ?>
         <div id="side-panel" class="hidden-phone span3">
-        <?php
-            if (isset($widgets["side"])) {
-                $side = $widgets["side"];
-                echo $this->{$side["Widget"]["helper_name"]}->build(${"options_" .  
-                                                                      $side["Widget"]["id"]});
-            }
-        ?>
+          <?php 
+            $side = $widgets["side"];
+            echo $this->{$side["Widget"]["helper_name"]}->build(${"options_" .  
+                                                                $side["Widget"]["id"]});
+          ?>
         </div>
+        <?php } ?>
     </div>
 
     <div class="row">
